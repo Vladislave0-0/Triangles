@@ -1,28 +1,37 @@
 #pragma once
 
+#include "config.hpp"
+#include "line.hpp"
+#include "plane.hpp"
 #include "point.hpp"
+#include "vector.hpp"
 
-template <typename PointTy = float> class Triangle {
+template <typename PointTy = double> class Triangle {
+public:
   enum TriangleType { NONE, POINT, LINE, TRIANGLE };
+
+private:
+  TriangleType type = NONE;
 
   Point<PointTy> a, b, c;
 
-  bool validate() {
+  void validate() {
+    if (!a.valid() || !b.valid() || !c.valid()) {
+      return;
+    }
+
     if (a == b && b == c) {
       type = POINT;
-      return false;
+      return;
     } else if (a == b || b == c || a == c) {
       type = LINE;
-      return false;
+      return;
     }
 
     type = TRIANGLE;
-    return true;
   }
 
 public:
-  TriangleType type = NONE;
-
   Triangle(const PointTy &x1, const PointTy &y1, const PointTy &z1,
            const PointTy &x2, const PointTy &y2, const PointTy &z2,
            const PointTy &x3, const PointTy &y3, const PointTy &z3)
@@ -48,4 +57,189 @@ public:
     b.print();
     c.print();
   }
+
+  Point<PointTy> get_a() const { return a; }
+
+  Point<PointTy> get_b() const { return b; }
+
+  Point<PointTy> get_c() const { return c; }
+
+  TriangleType get_type() const { return type; }
 };
+
+template <typename PointTy = double>
+bool check_intersection(Triangle<PointTy> &t1, Triangle<PointTy> &t2) {
+  using TYPE = typename Triangle<PointTy>::TriangleType;
+
+  TYPE type1 = t1.get_type();
+  TYPE type2 = t2.get_type();
+
+  if (type1 == TYPE::TRIANGLE && type2 == TYPE::TRIANGLE) {
+    return intersect_triangle_with_triangle_in_3D(t1, t2);
+  }
+  if ((type1 == TYPE::TRIANGLE && type2 == TYPE::LINE) ||
+      (type1 == TYPE::LINE && type2 == TYPE::TRIANGLE)) {
+    // return intersectTriangleWithLine(t1, t2);
+  }
+  if ((type1 == TYPE::TRIANGLE && type2 == TYPE::POINT) ||
+      (type1 == TYPE::POINT && type2 == TYPE::TRIANGLE)) {
+    // return intersectTriangleWithPoint(t1, t2);
+  }
+  if (type1 == TYPE::LINE && type2 == TYPE::LINE) {
+    // return intersectLineWithLine(t1, t2);
+  }
+  if ((type1 == TYPE::LINE && type2 == TYPE::POINT) ||
+      (type1 == TYPE::POINT && type2 == TYPE::LINE)) {
+    // return intersectLineWithPoint(t1, t2);
+  }
+  if (type1 == TYPE::POINT && type2 == TYPE::POINT) {
+    return t1.get_a() == t2.get_a();
+  }
+
+  return false;
+}
+
+template <typename PointTy = double>
+bool intersect_triangle_with_triangle_in_3D(Triangle<PointTy> &t1,
+                                            Triangle<PointTy> &t2) {
+  Plane<PointTy> plane1(t1.get_a(), t1.get_b(), t1.get_c());
+  Plane<PointTy> plane2(t2.get_a(), t2.get_b(), t2.get_c());
+
+  // Если все знаковые расстояния от вершин Т2 до треугольника Т1 одного знака,
+  // значит треугольники не пересекаются.
+  PointTy signed_dist11 = plane1.substitute(t2.get_a());
+  PointTy signed_dist21 = plane1.substitute(t2.get_b());
+  PointTy signed_dist31 = plane1.substitute(t2.get_c());
+  if ((signed_dist11 < 0 && signed_dist21 < 0 && signed_dist31 < 0) ||
+      (signed_dist11 > 0 && signed_dist21 > 0 && signed_dist31 > 0)) {
+    return false;
+  }
+
+  // Если все знаковые расстояния от вершин Т1 до треугольника Т2 одного знака,
+  // значит треугольники не пересекаются.
+  PointTy signed_dist12 = plane2.substitute(t1.get_a());
+  PointTy signed_dist22 = plane2.substitute(t1.get_b());
+  PointTy signed_dist32 = plane2.substitute(t1.get_c());
+  if ((signed_dist12 < 0 && signed_dist22 < 0 && signed_dist32 < 0) ||
+      (signed_dist12 > 0 && signed_dist22 > 0 && signed_dist32 > 0)) {
+    return false;
+  }
+
+  // plane1.print();
+  // plane1.print_normal();
+
+  // plane2.print();
+  // plane2.print_normal();
+
+  // Vector vec = cross(plane1.get_normal(), plane2.get_normal());
+  // vec.print();
+
+  // На данном этапе плоскости треугольников либо пересекаются по линии, либо
+  // совпадают. Проверим на совпадение.
+  if ((plane1.get_D() == plane2.get_D()) ||
+      (-plane1.get_D() == plane2.get_D())) {
+    return intersect_triangle_with_triangle_in_2D(t1, t2);
+  }
+
+  // Тогда проверим на пересечение. Найдем прямую пересечения двух плоскостей.
+  Line<PointTy> inter_line{get_planes_intersection_vector(plane1, plane2),
+                           get_planes_intersection_point(plane1, plane2)};
+  inter_line.print();
+
+  // Найдем интервалы пересечения треугольников с прямой пересечения плоскостей
+  // Interval interval1 = get_triangle_and_line_intersection_interval();
+  // Interval interval2 = get_triangle_and_line_intersection_interval();
+
+
+  return true;
+}
+
+template <typename PointTy = double>
+Vector<PointTy> get_planes_intersection_vector(const Plane<PointTy> &plane1,
+                                               const Plane<PointTy> &plane2) {
+  Vector vec = cross(plane1.get_normal(), plane2.get_normal());
+  return vec;
+}
+
+template <typename PointTy = double>
+Point<PointTy> get_planes_intersection_point(const Plane<PointTy> &plane1,
+                                             const Plane<PointTy> &plane2) {
+  PointTy x, y, z = NAN;
+
+  PointTy determinant_x_zero =
+      plane1.get_B() * plane2.get_C() - plane1.get_C() * plane2.get_B();
+  PointTy determinant_y_zero =
+      plane1.get_A() * plane2.get_C() - plane1.get_C() * plane2.get_A();
+  PointTy determinant_z_zero =
+      plane1.get_A() * plane2.get_B() - plane1.get_B() * plane2.get_A();
+
+  // A1x + B1y = -D1
+  // A2x + B2y = -D2
+  if (!double_cmp(determinant_z_zero, 0.0)) {
+    x = (plane1.get_B() * plane2.get_D() - plane2.get_B() * plane1.get_D()) /
+        determinant_z_zero;
+    y = (plane2.get_A() * plane1.get_D() - plane1.get_A() * plane2.get_D()) /
+        determinant_z_zero;
+    z = 0.0;
+
+  }
+  // A1x + С1z = -D1
+  // A2x + С2z = -D2
+  else if (!double_cmp(determinant_y_zero, 0.0)) {
+    x = (plane1.get_C() * plane2.get_D() - plane2.get_C() * plane1.get_D()) /
+        determinant_y_zero;
+    z = (plane2.get_A() * plane1.get_D() - plane1.get_A() * plane2.get_D()) /
+        determinant_y_zero;
+    y = 0.0;
+  }
+  // B1y + С1z = -D1
+  // B2y + С2z = -D2
+  else if (!double_cmp(determinant_x_zero, 0.0)) {
+    y = (plane1.get_C() * plane2.get_D() - plane2.get_C() * plane1.get_D()) /
+        determinant_x_zero;
+    z = (plane2.get_B() * plane1.get_D() - plane1.get_B() * plane2.get_D()) /
+        determinant_x_zero;
+    x = 0.0;
+  }
+
+  if (x == NAN || y == NAN || z == NAN) {
+    std::cout
+        << "Ошибка в нахождении точки на прямой пересечения треугольников!\n";
+  }
+
+  Point<PointTy> intersectionPoint = {x, y, z};
+  return intersectionPoint;
+}
+
+template <typename PointTy = double>
+bool intersect_triangle_with_triangle_in_2D(Triangle<PointTy> &t1,
+                                            Triangle<PointTy> &t2) {
+  return true;
+}
+
+// Выделим направление, в котором проекция вектора прямой максимальная.
+// Делается это для избежания численных ошибок при работе с малыми значениями.
+// PointTy abs_x = abs(inter_vector.x);
+// PointTy abs_y = abs(inter_vector.y);
+// PointTy abs_z = abs(inter_vector.z);
+// size_t max_projection =
+//     (abs_x > abs_y) ? ((abs_x > abs_z) ? 1 : 3)
+//                     : ((abs_y > abs_z) ? 2 : 3);
+
+// auto computeInterval = [&](const Triangle<PointTy> &T, const Vector<PointTy>
+// &N, PointTy d,
+//                            const Vector<PointTy> &D, size_t axis) {
+//   PointTy proj[3];
+
+//   proj[0] = dot(D, T.get_a());
+//   proj[1] = dot(D, T.get_b());
+//   proj[2] = dot(D, T.get_c());
+
+//   PointTy minProj = std::min(proj[0], std::min(proj[1], proj[2]));
+//   PointTy maxProj = std::max(proj[0], std::max(proj[1], proj[2]));
+//   return std::make_pair(minProj, maxProj);
+// };
+
+// auto [min1, max1] = computeInterval(t1, plane1.get_normal(), plane1.get_D(),
+// inter_vector, max_projection); auto [min2, max2] = computeInterval(t2,
+// plane2.get_normal(), plane2.get_D(), inter_vector, max_projection);

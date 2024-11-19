@@ -2,6 +2,6 @@
 
 #include <math.h>
 
-const float epsilon = 1e-6;
+const double epsilon = 1e-6;
 
-bool float_cmp(float x, float y);
+bool double_cmp(double x, double y);

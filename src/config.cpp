@@ -1,3 +1,3 @@
 #include "../include/config.hpp"
 
-bool float_cmp(float x, float y) { return fabs(x - y) < epsilon; }
+bool double_cmp(double x, double y) { return fabs(x - y) < epsilon; }

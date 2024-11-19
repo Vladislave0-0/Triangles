@@ -1,22 +1,44 @@
 #include "../include/triangles.hpp"
-#include "list"
+#include <vector>
 
 int main() {
   size_t TriagNum = 0;
   std::cin >> TriagNum;
 
-  std::list<Triangle<float>> input;
+  std::vector<Triangle<double>> input;
+
+  // Vector<double> a(1, 2, 3);
+  // Vector<double> b(4, 5, 6);
+
+  // Vector<double> c = cross(a, b);
+  // Vector<double> d = cross(b, a);
+
+  // c.print();
+  // d.print();
+
+  // return 0;
 
   for (size_t i = 0; i < TriagNum; ++i) {
-    float x1 = 0, y1 = 0, z1 = 0;
-    float x2 = 0, y2 = 0, z2 = 0;
-    float x3 = 0, y3 = 0, z3 = 0;
+    double x1 = 0, y1 = 0, z1 = 0;
+    double x2 = 0, y2 = 0, z2 = 0;
+    double x3 = 0, y3 = 0, z3 = 0;
 
     std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
 
-    Triangle<float> triangle(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+    Triangle<double> triangle(x1, y1, z1, x2, y2, z2, x3, y3, z3);
     input.push_back(triangle);
-    triangle.print();
-    std::cout << triangle.type << "\n\n";
+  }
+
+  for (size_t i = 0; i < TriagNum - 1; ++i) {
+    for (size_t j = i + 1; j < TriagNum; ++j) {
+      if (check_intersection(input[i], input[j]))
+        std::cout << "Intersect\n";
+    }
   }
 }
+
+
+// 1 5 -7 -6
+// 1 1 0 -5
+// Направляющий вектор прямой
+// (7 ;-7 ;-4)
