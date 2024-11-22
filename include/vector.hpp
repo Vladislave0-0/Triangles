@@ -79,7 +79,19 @@ PointTy dot(const Vector<PointTy> &vector1, const Vector<PointTy> &vector2) {
 
 template <typename PointTy = double>
 PointTy dot(const Vector<PointTy> &vector, const Point<PointTy> &point) {
-  return vector.x * point.get_x() + vector.y * point.get_y() + vector.z * point.get_z();
+  return vector.x * point.get_x() + vector.y * point.get_y() +
+         vector.z * point.get_z();
+}
+
+template <typename PointTy = double>
+PointTy dot(const Point<PointTy> &point, const Vector<PointTy> &vector) {
+  return vector.x * point.get_x() + vector.y * point.get_y() +
+         vector.z * point.get_z();
+}
+
+template <typename PointTy = double>
+PointTy dot(const Point<PointTy> &point1, const Point<PointTy> &point2) {
+  return point1.get_x() * point2.get_x() + point1.get_y() * point2.get_y() + point1.get_z() * point2.get_z();
 }
 
 template <typename PointTy = double>
@@ -98,4 +110,10 @@ Vector<PointTy> cross(const Vector<PointTy> &vector,
                       vector.z * point.get_x() - vector.x * point.get_z(),
                       vector.x * point.get_y() - vector.y * point.get_x());
   return vec;
+}
+
+template <typename PointTy = double>
+Vector<PointTy> get_vector_from_point(const Point<PointTy> &point) {
+  Vector<PointTy> vector{point.get_x(), point.get_y(), point.get_z()};
+  return vector;
 }

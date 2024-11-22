@@ -24,11 +24,20 @@ public:
     std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
   }
 
+  void print_no_endl() const {
+    std::cout << "(" << x << ", " << y << ", " << z << ")";
+  }
+
   PointTy norm() const { return x * x + y * y + z * z; }
 
   bool operator==(const Point<PointTy> &other) const {
     return double_cmp(x, other.x) && double_cmp(y, other.y) &&
            double_cmp(z, other.z);
+  }
+
+  bool operator!=(const Point<PointTy> &other) const {
+    return !double_cmp(x, other.x) || !double_cmp(y, other.y) ||
+           !double_cmp(z, other.z);
   }
 
   Point<PointTy> operator+(const Point<PointTy> &other) const {
@@ -39,5 +48,11 @@ public:
   Point<PointTy> operator-(const Point<PointTy> &other) const {
     Point<PointTy> sub(x - other.x, y - other.y, z - other.z);
     return sub;
+  }
+
+  void operator=(const Point<PointTy> &other) {
+    x = other.x;
+    y = other.y;
+    z = other.z;
   }
 };

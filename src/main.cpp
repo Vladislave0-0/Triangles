@@ -7,17 +7,6 @@ int main() {
 
   std::vector<Triangle<double>> input;
 
-  // Vector<double> a(1, 2, 3);
-  // Vector<double> b(4, 5, 6);
-
-  // Vector<double> c = cross(a, b);
-  // Vector<double> d = cross(b, a);
-
-  // c.print();
-  // d.print();
-
-  // return 0;
-
   for (size_t i = 0; i < TriagNum; ++i) {
     double x1 = 0, y1 = 0, z1 = 0;
     double x2 = 0, y2 = 0, z2 = 0;
@@ -36,9 +25,3 @@ int main() {
     }
   }
 }
-
-
-// 1 5 -7 -6
-// 1 1 0 -5
-// Направляющий вектор прямой
-// (7 ;-7 ;-4)
