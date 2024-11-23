@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config.hpp"
 #include "point.hpp"
 #include "vector.hpp"
 
@@ -19,6 +20,27 @@ public:
     std::cout << "z = " << vector.z << "t + " << point.get_z() << std::endl;
   }
 };
+
+// template <typename PointTy = double>
+// bool is_point_on_line(Point<PointTy> &point, Line<PointTy> &line) {
+//   if (double_cmp(line.vector.x * point.get_x() + line.point.get_x(), 0.0) &&
+//       double_cmp(line.vector.y * point.get_y() + line.point.get_y(), 0.0) &&
+//       double_cmp(line.vector.z * point.get_z() + line.point.get_z(), 0.0)) {
+//     return true;
+//   }
+
+//   return false;
+// }
+
+// template <typename PointTy = double>
+// bool equal(Line<PointTy> &line1, Line<PointTy> &line2) {
+//   if ((equal(line1.vector, line2.vector) || equal(line1.vector * (-1), line2.vector)) &&
+//       is_point_on_line(line1.point, line2)) {
+//     return true;
+//   }
+
+//   return false;
+// }
 
 // inter_line = P0 + s*d0; line = P1 + t*d1
 template <typename PointTy = double>

@@ -3,7 +3,85 @@
 #include "../include/config.hpp"
 #include "../include/triangles.hpp"
 
-bool double_cmp(double x, double y) { return fabs(x - y) < epsilon; }
+bool double_cmp(double x, double y) { return fabs(x - y) < _epsilon; }
+
+TEST(TriangleWithTriangle, Intersection2D_1) {
+  Point t1p1{0.4, -5.0, 0.0};
+  Point t1p2{1.0, 2.0, 0.0};
+  Point t1p3{5.0, 0.0, 0.0};
+  Point t2p1{-1.0, 0.0, 0.0};
+  Point t2p2{3.0, 2.0, 0.0};
+  Point t2p3{6.0, 2.0, 0.0};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+}
+
+TEST(TriangleWithTriangle, Intersection2D_2) {
+  Point t1p1{1.0, 0.0, 1.0};
+  Point t1p2{1.0, 0.0, 5.0};
+  Point t1p3{5.0, 0.0, 4.0};
+  Point t2p1{5.0, 0.0, 2.0};
+  Point t2p2{2.1, 0.0, 8.0};
+  Point t2p3{1.0, 0.0, -1.0};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+}
+
+TEST(TriangleWithTriangle, Intersection2D_3) {
+  Point t1p1{0.0, 0.0, 0.0};
+  Point t1p2{0.0, 1.0, 0.0};
+  Point t1p3{0.0, 0.0, 1.0};
+  Point t2p1{0.0, 0.5, 0.0};
+  Point t2p2{0.0, 1.5, 0.0};
+  Point t2p3{0.0, 0.5, 1.0};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+}
+
+TEST(TriangleWithTriangle, Intersection2D_4) {
+  Point t1p1{0.0, 0.0, 0.0};
+  Point t1p2{0.0, 1.0, 0.0};
+  Point t1p3{0.0, 0.0, 1.0};
+  Point t2p1{0.0, 1.0, 0.0};
+  Point t2p2{0.0, 2.0, 0.0};
+  Point t2p3{0.0, 0.5, 1.0};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+}
+
+TEST(TriangleWithTriangle, Intersection2D_5) {
+  Point t1p1{0.0, 0.0, 0.0};
+  Point t1p2{0.0, 1.0, 0.0};
+  Point t1p3{0.0, 0.0, 1.0};
+  Point t2p1{0.0, 1.0, 0.0};
+  Point t2p2{0.0, 2.0, 0.0};
+  Point t2p3{0.0, 0.5, 1.0};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+}
+
+TEST(TriangleWithTriangle, Intersection2D_6) {
+  Point t1p1{0.0, 0.0, 0.0};
+  Point t1p2{0.0, 1.0, 0.0};
+  Point t1p3{0.0, 0.0, 1.0};
+  Point t2p1{0.0, 1.1, 0.0};
+  Point t2p2{0.0, 2.0, 0.0};
+  Point t2p3{0.0, 0.5, 1.0};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+}
 
 TEST(TriangleWithTriangle, Intersection3D_1) {
   Point t1p1{1.0, 0.0, 0.0};
