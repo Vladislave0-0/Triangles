@@ -4,6 +4,8 @@
 #include "point.hpp"
 #include "vector.hpp"
 
+template <typename PointTy> class Triangle;
+
 template <typename PointTy = double> class Line {
 public:
   Vector<PointTy> vector;
@@ -21,26 +23,27 @@ public:
   }
 };
 
-// template <typename PointTy = double>
-// bool is_point_on_line(Point<PointTy> &point, Line<PointTy> &line) {
-//   if (double_cmp(line.vector.x * point.get_x() + line.point.get_x(), 0.0) &&
-//       double_cmp(line.vector.y * point.get_y() + line.point.get_y(), 0.0) &&
-//       double_cmp(line.vector.z * point.get_z() + line.point.get_z(), 0.0)) {
-//     return true;
-//   }
+template <typename PointTy = double>
+bool is_point_on_line(const Point<PointTy> &point, const Line<PointTy> &line) {
+  if (double_cmp(line.vector.x * point.get_x() + line.point.get_x(), 0.0) &&
+      double_cmp(line.vector.y * point.get_y() + line.point.get_y(), 0.0) &&
+      double_cmp(line.vector.z * point.get_z() + line.point.get_z(), 0.0)) {
+    return true;
+  }
 
-//   return false;
-// }
+  return false;
+}
 
-// template <typename PointTy = double>
-// bool equal(Line<PointTy> &line1, Line<PointTy> &line2) {
-//   if ((equal(line1.vector, line2.vector) || equal(line1.vector * (-1), line2.vector)) &&
-//       is_point_on_line(line1.point, line2)) {
-//     return true;
-//   }
+template <typename PointTy = double>
+bool equal(const Line<PointTy> &line1, const Line<PointTy> &line2) {
+  Vector<PointTy> cross_res = cross(vector_from_point(line1.point - line2.point), line2.vector);
+  if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
+      double_cmp(cross_res.z, 0.0)) {
+    return true;
+  }
 
-//   return false;
-// }
+  return false;
+}
 
 // inter_line = P0 + s*d0; line = P1 + t*d1
 template <typename PointTy = double>
@@ -56,8 +59,9 @@ Point<PointTy> intersect_line_with_line(const Line<PointTy> &line1,
   PointTy F = dot(line1.point - line2.point, line1.point - line2.point);
 
   PointTy denom = A * C - B * B;
-  if (double_cmp(denom, 0.0)) // Parallel lines
+  if (double_cmp(denom, 0.0)) { // Parallel lines
     return point;
+  }
 
   // Nonparallel lines
   PointTy s = (B * E - C * D) / denom;
@@ -73,4 +77,42 @@ Point<PointTy> intersect_line_with_line(const Line<PointTy> &line1,
            -line2.vector.z * t + line2.point.get_z()};
 
   return point;
+}
+
+template <typename PointTy = double>
+Line<PointTy> get_line_from_triangle(const Triangle<PointTy> t) {
+  Line<PointTy> line{};
+
+  if (t.get_a() == t.get_b()) {
+    line.vector = vector_from_point(t.get_c() - t.get_a());
+    line.point = t.get_a();
+  }
+
+  else if (t.get_a() == t.get_c()) {
+    line.vector = vector_from_point(t.get_b() - t.get_a());
+    line.point = t.get_a();
+  }
+
+  else {
+    line.vector = vector_from_point(t.get_c() - t.get_a());
+    line.point = t.get_a();
+  }
+
+  return line;
+}
+
+template <typename PointTy = double>
+bool intersect_line_with_point(const Triangle<PointTy> t1,
+                               const Triangle<PointTy> t2) {
+  Line<PointTy> line = get_line_from_triangle(t1);
+  Point<PointTy> point = t2.get_a();
+
+  Vector<PointTy> cross_res =
+      cross(vector_from_point(point - line.point), line.vector);
+  if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
+      double_cmp(cross_res.z, 0.0)) {
+    return true;
+  }
+
+  return false;
 }

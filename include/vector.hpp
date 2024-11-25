@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config.hpp"
 #include "point.hpp"
 
 template <typename PointTy = double> class Vector {
@@ -28,11 +29,13 @@ public:
     std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
   }
 
-  void normalize_line() {
-    PointTy length = length();
-    x = x / length;
-    y = y / length;
-    z = z / length;
+  void normalize() {
+    PointTy len = length();
+    if (!double_cmp(len, 0.0)) {
+      x = x / len;
+      y = y / len;
+      z = z / len;
+    }
   }
 
   Vector<PointTy> operator+(const Vector<PointTy> &other) const {
@@ -50,13 +53,30 @@ public:
     return scalar_mul;
   }
 
-  void operator=(const Vector<PointTy> &other) const {
+  // bool operator==(const Vector<PointTy> &other) const {
+  //   if (x == other.x && y == other.y && z == other.z) {
+  //     return true;
+  //   }
+
+  //   return false;
+  // }
+
+  bool operator==(const Vector<PointTy> &other) const {
+    if (double_cmp(x, other.x) && double_cmp(y, other.y) &&
+        double_cmp(z, other.z)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  void operator=(const Vector<PointTy> &other) {
     x = other.x;
     y = other.y;
     z = other.z;
   }
 
-  void operator=(const Point<PointTy> &other) const {
+  void operator=(const Point<PointTy> &other) {
     x = other.x;
     y = other.y;
     z = other.z;
@@ -65,10 +85,11 @@ public:
 
 template <typename PointTy = double>
 bool equal(const Vector<PointTy> &vector1, const Vector<PointTy> &vector2) {
-  if (vector1.x == vector2.x && vector1.y == vector2.y &&
-      vector1.z == vector2.z) {
+  if (double_cmp(vector1.x, vector2.x) && double_cmp(vector1.y, vector2.y) &&
+      double_cmp(vector1.z, vector2.z)) {
     return true;
   }
+
   return false;
 }
 
