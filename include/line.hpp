@@ -1,6 +1,5 @@
 #pragma once
 
-#include "config.hpp"
 #include "point.hpp"
 #include "vector.hpp"
 
@@ -36,7 +35,8 @@ bool is_point_on_line(const Point<PointTy> &point, const Line<PointTy> &line) {
 
 template <typename PointTy = double>
 bool equal(const Line<PointTy> &line1, const Line<PointTy> &line2) {
-  Vector<PointTy> cross_res = cross(vector_from_point(line1.point - line2.point), line2.vector);
+  Vector<PointTy> cross_res =
+      cross(vector_from_point(line1.point - line2.point), line2.vector);
   if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
       double_cmp(cross_res.z, 0.0)) {
     return true;
@@ -83,17 +83,16 @@ template <typename PointTy = double>
 Line<PointTy> get_line_from_triangle(const Triangle<PointTy> t) {
   Line<PointTy> line{};
 
+  if (t.get_type() != Triangle<PointTy>::LINE)
+    return line;
+
   if (t.get_a() == t.get_b()) {
     line.vector = vector_from_point(t.get_c() - t.get_a());
     line.point = t.get_a();
-  }
-
-  else if (t.get_a() == t.get_c()) {
+  } else if (t.get_a() == t.get_c()) {
     line.vector = vector_from_point(t.get_b() - t.get_a());
     line.point = t.get_a();
-  }
-
-  else {
+  } else {
     line.vector = vector_from_point(t.get_c() - t.get_a());
     line.point = t.get_a();
   }

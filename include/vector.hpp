@@ -1,6 +1,5 @@
 #pragma once
 
-#include "config.hpp"
 #include "point.hpp"
 
 template <typename PointTy = double> class Vector {
@@ -53,14 +52,6 @@ public:
     return scalar_mul;
   }
 
-  // bool operator==(const Vector<PointTy> &other) const {
-  //   if (x == other.x && y == other.y && z == other.z) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
-
   bool operator==(const Vector<PointTy> &other) const {
     if (double_cmp(x, other.x) && double_cmp(y, other.y) &&
         double_cmp(z, other.z)) {
@@ -84,28 +75,12 @@ public:
 };
 
 template <typename PointTy = double>
-bool equal(const Vector<PointTy> &vector1, const Vector<PointTy> &vector2) {
-  if (double_cmp(vector1.x, vector2.x) && double_cmp(vector1.y, vector2.y) &&
-      double_cmp(vector1.z, vector2.z)) {
-    return true;
-  }
-
-  return false;
-}
-
-template <typename PointTy = double>
 PointTy dot(const Vector<PointTy> &vector1, const Vector<PointTy> &vector2) {
   return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
 }
 
 template <typename PointTy = double>
 PointTy dot(const Vector<PointTy> &vector, const Point<PointTy> &point) {
-  return vector.x * point.get_x() + vector.y * point.get_y() +
-         vector.z * point.get_z();
-}
-
-template <typename PointTy = double>
-PointTy dot(const Point<PointTy> &point, const Vector<PointTy> &vector) {
   return vector.x * point.get_x() + vector.y * point.get_y() +
          vector.z * point.get_z();
 }

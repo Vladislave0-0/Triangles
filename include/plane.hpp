@@ -1,9 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <math.h>
-
-#include "config.hpp"
 #include "point.hpp"
 #include "vector.hpp"
 

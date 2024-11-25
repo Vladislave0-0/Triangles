@@ -1,5 +1,4 @@
 #include "../include/triangles.hpp"
-#include <vector>
 
 int main() {
   size_t TriagNum = 0;

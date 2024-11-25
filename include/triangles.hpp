@@ -1,11 +1,10 @@
 #pragma once
 
-#include "config.hpp"
-#include "interval.hpp"
-#include "line.hpp"
+#include <utility>
+
 #include "plane.hpp"
-#include "point.hpp"
-#include "vector.hpp"
+#include "line.hpp"
+#include "interval.hpp"
 
 template <typename PointTy = double> class Triangle {
 public:
@@ -97,7 +96,7 @@ bool check_intersection(Triangle<PointTy> &t1, Triangle<PointTy> &t2) {
     return intersect_triangle_with_triangle_in_3D(t1, t2);
   }
 
-  if (type1 == TYPE::TRIANGLE && type2 == TYPE::LINE) { // не доделано
+  if (type1 == TYPE::TRIANGLE && type2 == TYPE::LINE) {
     return intersect_triangle_with_line_in_3D(t1, t2);
   } else if (type1 == TYPE::LINE && type2 == TYPE::TRIANGLE) {
     return intersect_triangle_with_line_in_3D(t2, t1);
@@ -198,32 +197,6 @@ get_interval_of_triangle_and_line(const Line<PointTy> &inter_line,
 }
 
 template <typename PointTy = double>
-bool check_if_inter_point_belongs_triangle(const Point<PointTy> &a,
-                                           const Point<PointTy> &b,
-                                           const Point<PointTy> &point) {
-  if (!point.valid())
-    return false;
-
-  PointTy min_x = std::min(a.get_x(), b.get_x());
-  PointTy max_x = std::max(a.get_x(), b.get_x());
-  PointTy min_y = std::min(a.get_y(), b.get_y());
-  PointTy max_y = std::max(a.get_y(), b.get_y());
-  PointTy min_z = std::min(a.get_z(), b.get_z());
-  PointTy max_z = std::max(a.get_z(), b.get_z());
-
-  if ((point.get_x() >= min_x && point.get_x() <= max_x) &&
-      (point.get_y() >= min_y && point.get_y() <= max_y) &&
-      (point.get_z() >= min_z && point.get_z() <= max_z)) {
-    return true;
-  }
-
-  if (point == a || point == b)
-    return true;
-
-  return false;
-}
-
-template <typename PointTy = double>
 bool intersect_triangle_with_triangle_in_2D(Triangle<PointTy> &t1,
                                             Triangle<PointTy> &t2) {
   Line<PointTy> line1{vector_from_point(t2.get_b() - t2.get_a()), t2.get_a()};
@@ -234,157 +207,18 @@ bool intersect_triangle_with_triangle_in_2D(Triangle<PointTy> &t1,
   Point<PointTy> b = t2.get_b();
   Point<PointTy> c = t2.get_c();
 
-  if (intersect_triangle_with_line_in_2D(t1, line1, a, b) ||
-      intersect_triangle_with_line_in_2D(t1, line2, a, c) ||
-      intersect_triangle_with_line_in_2D(t1, line3, b, c)) {
+  if (intersect_triangle_with_segment_in_2D(t1, line1, a, b) ||
+      intersect_triangle_with_segment_in_2D(t1, line2, a, c) ||
+      intersect_triangle_with_segment_in_2D(t1, line3, b, c)) {
     return true;
   }
 
   return false;
 }
-
-template <typename PointTy = double>
-bool intersect_triangle_with_line_in_2D(Triangle<PointTy> &t1,
-                                        Line<PointTy> &line,
-                                        Point<PointTy> &t2_a,
-                                        Point<PointTy> &t2_b) {
-  Line<PointTy> line1{vector_from_point(t1.get_b() - t1.get_a()), t1.get_a()};
-  Line<PointTy> line2{vector_from_point(t1.get_c() - t1.get_a()), t1.get_a()};
-  Line<PointTy> line3{vector_from_point(t1.get_c() - t1.get_b()), t1.get_b()};
-
-  Point<PointTy> point1 = intersect_line_with_line(line, line1);
-  if (check_if_inter_point_belongs_side(t1.get_a(), t1.get_b(), point1, t2_a,
-                                        t2_b)) {
-    return true;
-  } else {
-    Point<PointTy> point2 = intersect_line_with_line(line, line2);
-    if (check_if_inter_point_belongs_side(t1.get_a(), t1.get_c(), point2, t2_a,
-                                          t2_b)) {
-
-      return true;
-    }
-
-    Point<PointTy> point3 = intersect_line_with_line(line, line3);
-    if (check_if_inter_point_belongs_side(t1.get_b(), t1.get_c(), point3, t2_a,
-                                          t2_b))
-      return true;
-  }
-
-  return false;
-}
-
-template <typename PointTy = double>
-bool check_if_inter_point_belongs_side(const Point<PointTy> &a1,
-                                       const Point<PointTy> &b1,
-                                       const Point<PointTy> &point,
-                                       const Point<PointTy> &a2,
-                                       const Point<PointTy> &b2) {
-  if (!point.valid())
-    return false;
-
-  PointTy min_x1 = std::min(a1.get_x(), b1.get_x());
-  PointTy max_x1 = std::max(a1.get_x(), b1.get_x());
-  PointTy min_y1 = std::min(a1.get_y(), b1.get_y());
-  PointTy max_y1 = std::max(a1.get_y(), b1.get_y());
-  PointTy min_z1 = std::min(a1.get_z(), b1.get_z());
-  PointTy max_z1 = std::max(a1.get_z(), b1.get_z());
-
-  if ((point.get_x() >= min_x1 && point.get_x() <= max_x1) &&
-      (point.get_y() >= min_y1 && point.get_y() <= max_y1) &&
-      (point.get_z() >= min_z1 && point.get_z() <= max_z1)) {
-
-    PointTy min_x2 = std::min(a2.get_x(), b2.get_x());
-    PointTy max_x2 = std::max(a2.get_x(), b2.get_x());
-    PointTy min_y2 = std::min(a2.get_y(), b2.get_y());
-    PointTy max_y2 = std::max(a2.get_y(), b2.get_y());
-    PointTy min_z2 = std::min(a2.get_z(), b2.get_z());
-    PointTy max_z2 = std::max(a2.get_z(), b2.get_z());
-
-    if ((point.get_x() >= min_x2 && point.get_x() <= max_x2) &&
-        (point.get_y() >= min_y2 && point.get_y() <= max_y2) &&
-        (point.get_z() >= min_z2 && point.get_z() <= max_z2)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-template <typename PointTy = double>
-bool check_if_inter_point_belongs_side(const Point<PointTy> &a1,
-                                       const Point<PointTy> &b1,
-                                       const Point<PointTy> &point,
-                                       const Point<PointTy> &a2,
-                                       const Point<PointTy> &b2,
-                                       const Point<PointTy> &c2) {
-  if (!point.valid())
-    return false;
-
-  PointTy min_x1 = std::min(a1.get_x(), b1.get_x());
-  PointTy max_x1 = std::max(a1.get_x(), b1.get_x());
-  PointTy min_y1 = std::min(a1.get_y(), b1.get_y());
-  PointTy max_y1 = std::max(a1.get_y(), b1.get_y());
-  PointTy min_z1 = std::min(a1.get_z(), b1.get_z());
-  PointTy max_z1 = std::max(a1.get_z(), b1.get_z());
-
-  if ((point.get_x() >= min_x1 && point.get_x() <= max_x1) &&
-      (point.get_y() >= min_y1 && point.get_y() <= max_y1) &&
-      (point.get_z() >= min_z1 && point.get_z() <= max_z1)) {
-
-    PointTy min_x2 = std::min(a2.get_x(), std::min(b2.get_x(), c2.get_x()));
-    PointTy max_x2 = std::max(a2.get_x(), std::max(b2.get_x(), c2.get_x()));
-    PointTy min_y2 = std::min(a2.get_y(), std::min(b2.get_y(), c2.get_y()));
-    PointTy max_y2 = std::max(a2.get_y(), std::max(b2.get_y(), c2.get_y()));
-    PointTy min_z2 = std::min(a2.get_z(), std::min(b2.get_z(), c2.get_z()));
-    PointTy max_z2 = std::max(a2.get_z(), std::max(b2.get_z(), c2.get_z()));
-
-    if ((point.get_x() >= min_x2 && point.get_x() <= max_x2) &&
-        (point.get_y() >= min_y2 && point.get_y() <= max_y2) &&
-        (point.get_z() >= min_z2 && point.get_z() <= max_z2)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-// template <typename PointTy = double>
-// bool intersect_triangle_with_line(const Triangle<PointTy> t1,
-//                                   const Triangle<PointTy> t2) {
-//   Line<PointTy> line1{vector_from_point(t1.get_b() - t1.get_a()),
-//   t1.get_a()}; Line<PointTy> line2{vector_from_point(t1.get_c() -
-//   t1.get_a()), t1.get_a()}; Line<PointTy> line3{vector_from_point(t1.get_c()
-//   - t1.get_b()), t1.get_b()};
-
-//   Line<PointTy> line{vector_from_point(t2.get_b() - t2.get_a()), t2.get_a()};
-
-//   Point<PointTy> point1 = intersect_line_with_line(line, line1);
-//   if (check_if_inter_point_belongs_side(t1.get_a(), t1.get_b(), point1,
-//                                         t2.get_a(), t2.get_b(), t2.get_c()))
-//                                         {
-//     return true;
-//   } else {
-//     Point<PointTy> point2 = intersect_line_with_line(line, line2);
-//     if (check_if_inter_point_belongs_side(t1.get_a(), t1.get_c(), point2,
-//                                           t2.get_a(), t2.get_b(),
-//                                           t2.get_c())) {
-
-//       return true;
-//     }
-
-//     Point<PointTy> point3 = intersect_line_with_line(line, line3);
-//     if (check_if_inter_point_belongs_side(t1.get_b(), t1.get_c(), point3,
-//                                           t2.get_a(), t2.get_b(),
-//                                           t2.get_c()))
-//       return true;
-//   }
-
-//   return false;
-// }
 
 template <typename PointTy = double>
 bool intersect_triangle_with_line_in_3D(const Triangle<PointTy> &t1,
-                                  const Triangle<PointTy> &t2) {
+                                        const Triangle<PointTy> &t2) {
   Line<PointTy> line = get_line_from_triangle(t2);
 
   Vector<PointTy> e1 = vector_from_point(t1.get_b() - t1.get_a());
@@ -393,47 +227,28 @@ bool intersect_triangle_with_line_in_3D(const Triangle<PointTy> &t1,
   Vector<PointTy> p = cross(line.vector, e2);
   PointTy det = dot(p, e1);
 
-  // e1.print();
-  // e2.print();
-  // line.print();
-  // line.vector.print();
-  // line.point.print();
-
-  if (double_cmp(det, 0.0))
-    return false;
+  if (double_cmp(det, 0.0)) {
+    return intersect_triangle_with_segment_in_2D(
+        t1, line, get_triangle_space(t2).first, get_triangle_space(t2).second);
+  }
 
   Vector<PointTy> s = vector_from_point(line.point - t1.get_a());
   PointTy u = dot(s, p) / det;
-  std::cout << det << "\n";
-  // u *= -1;
-
-  if (u < 0.0 || u > 1.0) {
+  if (u < 0.0 || u > 1.0)
     return false;
-  }
 
   Vector<PointTy> q = cross(s, e1);
   PointTy v = dot(line.vector, q) / det;
-
-  // v *= -1;
-
-  if (v < 0.0 || v > 1.0) {
+  if (v < 0.0 || v > 1.0)
     return false;
-  }
 
   PointTy t = dot(e2, q) / det;
-  std::cout << t << "\n";
-
-  // t *= -1;
-  if (t < 0.0 || t > 1.0) {
-    std::cout << "out\n";
+  if (t < 0.0 || t > 1.0)
     return false;
-  }
 
-  if ((u+v) < 0.0 || (u+v) > 1.0) {
+  if ((u + v) > 1.0)
     return false;
-  }
 
-  std::cout << t << " " << u << " " << v << std::endl;
   return true;
 }
 
@@ -463,56 +278,124 @@ bool intersect_line_with_line(const Triangle<PointTy> t1,
   Line<PointTy> line1 = get_line_from_triangle(t1);
   Line<PointTy> line2 = get_line_from_triangle(t2);
 
-  Point<PointTy> inter_point = intersect_line_with_line(line1, line2);
+  Point<PointTy> point = intersect_line_with_line(line1, line2);
 
-  PointTy min_x1 = std::min(t1.get_a().get_x(),
-                            std::min(t1.get_b().get_x(), t1.get_c().get_x()));
-  PointTy max_x1 = std::max(t1.get_a().get_x(),
-                            std::max(t1.get_b().get_x(), t1.get_c().get_x()));
-  PointTy min_y1 = std::min(t1.get_a().get_y(),
-                            std::min(t1.get_b().get_y(), t1.get_c().get_y()));
-  PointTy max_y1 = std::max(t1.get_a().get_y(),
-                            std::max(t1.get_b().get_y(), t1.get_c().get_y()));
-  PointTy min_z1 = std::min(t1.get_a().get_z(),
-                            std::min(t1.get_b().get_z(), t1.get_c().get_z()));
-  PointTy max_z1 = std::max(t1.get_a().get_z(),
-                            std::max(t1.get_b().get_z(), t1.get_c().get_z()));
+  auto [min1, max1] = get_triangle_space(t1);
+  auto [min2, max2] = get_triangle_space(t2);
 
-  PointTy min_x2 = std::min(t2.get_a().get_x(),
-                            std::min(t2.get_b().get_x(), t2.get_c().get_x()));
-  PointTy max_x2 = std::max(t2.get_a().get_x(),
-                            std::max(t2.get_b().get_x(), t2.get_c().get_x()));
-  PointTy min_y2 = std::min(t2.get_a().get_y(),
-                            std::min(t2.get_b().get_y(), t2.get_c().get_y()));
-  PointTy max_y2 = std::max(t2.get_a().get_y(),
-                            std::max(t2.get_b().get_y(), t2.get_c().get_y()));
-  PointTy min_z2 = std::min(t2.get_a().get_z(),
-                            std::min(t2.get_b().get_z(), t2.get_c().get_z()));
-  PointTy max_z2 = std::max(t2.get_a().get_z(),
-                            std::max(t2.get_b().get_z(), t2.get_c().get_z()));
-
-  if (!inter_point.valid()) {
-    if (equal(line1, line2)) { // Same lines
-      if (check_two_segments_intersection(min_x1, max_x1, min_x2, max_x2) ||
-          check_two_segments_intersection(min_y1, max_y1, min_y2, max_y2) ||
-          check_two_segments_intersection(min_z1, max_z1, min_z2, max_z2)) {
+  if (!point.valid()) {
+    if (equal(line1, line2)) {
+      if (check_two_segments_intersection(min1.get_x(), max1.get_x(),
+                                          min2.get_x(), max2.get_x()) ||
+          check_two_segments_intersection(min1.get_y(), max1.get_y(),
+                                          min2.get_y(), max2.get_y()) ||
+          check_two_segments_intersection(min1.get_z(), max1.get_z(),
+                                          min2.get_z(), max2.get_z())) {
         return true;
       }
     }
-
     return false;
   }
 
-  if ((inter_point.get_x() >= min_x1 && inter_point.get_x() <= max_x1) &&
-      (inter_point.get_y() >= min_y1 && inter_point.get_y() <= max_y1) &&
-      (inter_point.get_z() >= min_z1 && inter_point.get_z() <= max_z1)) {
+  return check_if_inter_point_belongs_space(min1, max1, min2, max2, point);
+}
 
-    if ((inter_point.get_x() >= min_x2 && inter_point.get_x() <= max_x2) &&
-        (inter_point.get_y() >= min_y2 && inter_point.get_y() <= max_y2) &&
-        (inter_point.get_z() >= min_z2 && inter_point.get_z() <= max_z2)) {
-      return true;
-    }
+template <typename PointTy = double>
+bool check_if_inter_point_belongs_sides(const Point<PointTy> &a1,
+                                        const Point<PointTy> &b1,
+                                        const Point<PointTy> &a2,
+                                        const Point<PointTy> &b2,
+                                        const Point<PointTy> &point) {
+  if (!point.valid())
+    return false;
+
+  auto [min1, max1] = get_segment_space(a1, b1);
+  auto [min2, max2] = get_segment_space(a2, b2);
+
+  return check_if_inter_point_belongs_space(min1, max1, min2, max2, point);
+}
+
+template <typename PointTy = double>
+bool check_if_inter_point_belongs_space(const Point<PointTy> &min1,
+                                        const Point<PointTy> &max1,
+                                        const Point<PointTy> &min2,
+                                        const Point<PointTy> &max2,
+                                        const Point<PointTy> &point) {
+  auto is_within_bounds = [](const Point<PointTy> &min,
+                             const Point<PointTy> &max,
+                             const Point<PointTy> &pt) {
+    return (pt.get_x() >= min.get_x() && pt.get_x() <= max.get_x()) &&
+           (pt.get_y() >= min.get_y() && pt.get_y() <= max.get_y()) &&
+           (pt.get_z() >= min.get_z() && pt.get_z() <= max.get_z());
+  };
+
+  return is_within_bounds(min1, max1, point) &&
+         is_within_bounds(min2, max2, point);
+}
+
+template <typename PointTy = double>
+bool intersect_triangle_with_segment_in_2D(const Triangle<PointTy> &t,
+                                           const Line<PointTy> &line,
+                                           const Point<PointTy> &seg_min,
+                                           const Point<PointTy> &seg_max) {
+  Line<PointTy> line1{vector_from_point(t.get_b() - t.get_a()), t.get_a()};
+  Point<PointTy> point1 = intersect_line_with_line(line, line1);
+  if (check_if_inter_point_belongs_sides(t.get_a(), t.get_b(), seg_min, seg_max,
+                                         point1)) {
+    return true;
+  }
+
+  Line<PointTy> line2{vector_from_point(t.get_c() - t.get_a()), t.get_a()};
+  Point<PointTy> point2 = intersect_line_with_line(line, line2);
+  if (check_if_inter_point_belongs_sides(t.get_a(), t.get_c(), seg_min, seg_max,
+                                         point2)) {
+    return true;
+  }
+
+  Line<PointTy> line3{vector_from_point(t.get_c() - t.get_b()), t.get_b()};
+  Point<PointTy> point3 = intersect_line_with_line(line, line3);
+  if (check_if_inter_point_belongs_sides(t.get_b(), t.get_c(), seg_min, seg_max,
+                                         point3)) {
+    return true;
   }
 
   return false;
+}
+
+template <typename PointTy = double>
+std::pair<Point<PointTy>, Point<PointTy>>
+get_triangle_space(const Triangle<PointTy> t) {
+  PointTy min_x = std::min(t.get_a().get_x(),
+                           std::min(t.get_b().get_x(), t.get_c().get_x()));
+  PointTy max_x = std::max(t.get_a().get_x(),
+                           std::max(t.get_b().get_x(), t.get_c().get_x()));
+  PointTy min_y = std::min(t.get_a().get_y(),
+                           std::min(t.get_b().get_y(), t.get_c().get_y()));
+  PointTy max_y = std::max(t.get_a().get_y(),
+                           std::max(t.get_b().get_y(), t.get_c().get_y()));
+  PointTy min_z = std::min(t.get_a().get_z(),
+                           std::min(t.get_b().get_z(), t.get_c().get_z()));
+  PointTy max_z = std::max(t.get_a().get_z(),
+                           std::max(t.get_b().get_z(), t.get_c().get_z()));
+
+  Point<PointTy> min_vector{min_x, min_y, min_z};
+  Point<PointTy> max_vector{max_x, max_y, max_z};
+
+  return std::make_pair(min_vector, max_vector);
+}
+
+template <typename PointTy = double>
+std::pair<Point<PointTy>, Point<PointTy>>
+get_segment_space(const Point<PointTy> a, const Point<PointTy> b) {
+  PointTy min_x = std::min(a.get_x(), b.get_x());
+  PointTy max_x = std::max(a.get_x(), b.get_x());
+  PointTy min_y = std::min(a.get_y(), b.get_y());
+  PointTy max_y = std::max(a.get_y(), b.get_y());
+  PointTy min_z = std::min(a.get_z(), b.get_z());
+  PointTy max_z = std::max(a.get_z(), b.get_z());
+
+  Point<PointTy> min_vector{min_x, min_y, min_z};
+  Point<PointTy> max_vector{max_x, max_y, max_z};
+
+  return std::make_pair(min_vector, max_vector);
 }

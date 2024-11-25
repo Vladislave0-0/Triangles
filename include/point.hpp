@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <math.h>
 
 #include "config.hpp"
 
@@ -92,7 +91,7 @@ bool is_point_in_triangle(const Triangle<PointTy> t, const Point<PointTy> p) {
 
   Vector<PointTy> zero{0, 0, 0};
 
-  if ((PA == zero && PB == zero) || (PB == zero && PC == zero) ||
+  if ((PA == zero && PB == zero) || (PA == zero && PC == zero) ||
       (PB == zero && PC == zero)) {
     return true;
   }
