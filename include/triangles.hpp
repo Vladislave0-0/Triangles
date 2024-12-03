@@ -2,13 +2,14 @@
 
 #include <utility>
 
-#include "plane.hpp"
-#include "line.hpp"
 #include "interval.hpp"
+#include "line.hpp"
+#include "plane.hpp"
 
 template <typename PointTy = double> class Triangle {
 public:
   enum TriangleType { NONE, POINT, LINE, TRIANGLE };
+  size_t id = 0;
 
 private:
   TriangleType type = NONE;

@@ -52,6 +52,11 @@ public:
     return scalar_mul;
   }
 
+  Vector<PointTy> operator/(const PointTy scalar) const {
+    Vector<PointTy> scalar_div(x / scalar, y / scalar, z / scalar);
+    return scalar_div;
+  }
+
   bool operator==(const Vector<PointTy> &other) const {
     if (double_cmp(x, other.x) && double_cmp(y, other.y) &&
         double_cmp(z, other.z)) {
