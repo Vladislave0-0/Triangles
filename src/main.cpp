@@ -41,6 +41,6 @@ int main() {
 
   std::list<int> res = tree.getAllTreeIntersectNum();
   for (auto elem : res) {
-    std::cout << elem << '\n';
+    std::cout << elem << std::endl;
   }
 }
