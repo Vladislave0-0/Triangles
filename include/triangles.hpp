@@ -325,9 +325,15 @@ bool check_if_inter_point_belongs_space(const Point<PointTy> &min1,
   auto is_within_bounds = [](const Point<PointTy> &min,
                              const Point<PointTy> &max,
                              const Point<PointTy> &pt) {
-    return (pt.get_x() >= min.get_x() && pt.get_x() <= max.get_x()) &&
-           (pt.get_y() >= min.get_y() && pt.get_y() <= max.get_y()) &&
-           (pt.get_z() >= min.get_z() && pt.get_z() <= max.get_z());
+    return (pt.get_x() >= min.get_x() && pt.get_x() <= max.get_x() ||
+            (double_cmp(pt.get_x(), min.get_x()) &&
+             double_cmp(pt.get_x(), max.get_x()))) &&
+           (pt.get_y() >= min.get_y() && pt.get_y() <= max.get_y() ||
+            (double_cmp(pt.get_y(), min.get_y()) &&
+             double_cmp(pt.get_y(), max.get_y()))) &&
+           (pt.get_z() >= min.get_z() && pt.get_z() <= max.get_z() ||
+            (double_cmp(pt.get_z(), min.get_z()) &&
+             double_cmp(pt.get_z(), max.get_z())));
   };
 
   return is_within_bounds(min1, max1, point) &&
