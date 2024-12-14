@@ -20,6 +20,17 @@ public:
     std::cout << "y = " << vector.y << "t + " << point.get_y() << std::endl;
     std::cout << "z = " << vector.z << "t + " << point.get_z() << std::endl;
   }
+
+  bool operator==(const Line<PointTy> &other) const {
+    Vector<PointTy> cross_res =
+        cross(vector_from_point(point - other.point), other.vector);
+    if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
+        double_cmp(cross_res.z, 0.0)) {
+      return true;
+    }
+
+    return false;
+  }
 };
 
 template <typename PointTy = double>
@@ -27,18 +38,6 @@ bool is_point_on_line(const Point<PointTy> &point, const Line<PointTy> &line) {
   if (double_cmp(line.vector.x * point.get_x() + line.point.get_x(), 0.0) &&
       double_cmp(line.vector.y * point.get_y() + line.point.get_y(), 0.0) &&
       double_cmp(line.vector.z * point.get_z() + line.point.get_z(), 0.0)) {
-    return true;
-  }
-
-  return false;
-}
-
-template <typename PointTy = double>
-bool equal(const Line<PointTy> &line1, const Line<PointTy> &line2) {
-  Vector<PointTy> cross_res =
-      cross(vector_from_point(line1.point - line2.point), line2.vector);
-  if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
-      double_cmp(cross_res.z, 0.0)) {
     return true;
   }
 

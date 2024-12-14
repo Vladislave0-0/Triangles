@@ -38,11 +38,6 @@ public:
            double_cmp(z, other.z);
   }
 
-  bool operator!=(const Point<PointTy> &other) const {
-    return !double_cmp(x, other.x) || !double_cmp(y, other.y) ||
-           !double_cmp(z, other.z);
-  }
-
   Point<PointTy> operator+(const Point<PointTy> &other) const {
     Point<PointTy> add(x + other.x, y + other.y, z + other.z);
     return add;
@@ -50,6 +45,8 @@ public:
 
   Point<PointTy> operator-(const Point<PointTy> &other) const {
     Point<PointTy> sub(x - other.x, y - other.y, z - other.z);
+    // Point<PointTy> sub(other.x - x, other.y-y, other.z-z);
+
     return sub;
   }
 

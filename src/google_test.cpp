@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "../include/config.hpp"
 #include "../include/triangles.hpp"
 
 bool double_cmp(double x, double y) { return fabs(x - y) < _epsilon; }
@@ -15,7 +14,7 @@ TEST(TriangleWithTriangle, Intersection2D_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection2D_2) {
@@ -28,7 +27,7 @@ TEST(TriangleWithTriangle, Intersection2D_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection2D_3) {
@@ -41,7 +40,7 @@ TEST(TriangleWithTriangle, Intersection2D_3) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection2D_4) {
@@ -54,7 +53,7 @@ TEST(TriangleWithTriangle, Intersection2D_4) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection2D_5) {
@@ -67,7 +66,7 @@ TEST(TriangleWithTriangle, Intersection2D_5) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection2D_6) {
@@ -80,7 +79,7 @@ TEST(TriangleWithTriangle, Intersection2D_6) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_1) {
@@ -93,7 +92,7 @@ TEST(TriangleWithTriangle, Intersection3D_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_2) {
@@ -106,7 +105,7 @@ TEST(TriangleWithTriangle, Intersection3D_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_3) {
@@ -119,7 +118,7 @@ TEST(TriangleWithTriangle, Intersection3D_3) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_4) {
@@ -132,7 +131,7 @@ TEST(TriangleWithTriangle, Intersection3D_4) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_5) {
@@ -145,7 +144,7 @@ TEST(TriangleWithTriangle, Intersection3D_5) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_6) {
@@ -158,7 +157,7 @@ TEST(TriangleWithTriangle, Intersection3D_6) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_7) {
@@ -171,7 +170,7 @@ TEST(TriangleWithTriangle, Intersection3D_7) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_8) {
@@ -184,7 +183,7 @@ TEST(TriangleWithTriangle, Intersection3D_8) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_9) {
@@ -197,7 +196,7 @@ TEST(TriangleWithTriangle, Intersection3D_9) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_10) {
@@ -210,7 +209,7 @@ TEST(TriangleWithTriangle, Intersection3D_10) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_11) {
@@ -223,7 +222,7 @@ TEST(TriangleWithTriangle, Intersection3D_11) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_12) {
@@ -236,7 +235,7 @@ TEST(TriangleWithTriangle, Intersection3D_12) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_13) {
@@ -249,7 +248,7 @@ TEST(TriangleWithTriangle, Intersection3D_13) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_14) {
@@ -262,7 +261,7 @@ TEST(TriangleWithTriangle, Intersection3D_14) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_15) {
@@ -275,7 +274,7 @@ TEST(TriangleWithTriangle, Intersection3D_15) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_16) {
@@ -288,7 +287,7 @@ TEST(TriangleWithTriangle, Intersection3D_16) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_17) {
@@ -301,7 +300,7 @@ TEST(TriangleWithTriangle, Intersection3D_17) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_18) {
@@ -314,7 +313,7 @@ TEST(TriangleWithTriangle, Intersection3D_18) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithTriangle, Intersection3D_19) {
@@ -327,7 +326,7 @@ TEST(TriangleWithTriangle, Intersection3D_19) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_triangle_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection3D_1) {
@@ -340,7 +339,7 @@ TEST(TriangleWithLine, Intersection3D_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection3D_2) {
@@ -353,7 +352,7 @@ TEST(TriangleWithLine, Intersection3D_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection3D_3) {
@@ -366,7 +365,7 @@ TEST(TriangleWithLine, Intersection3D_3) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection3D_4) {
@@ -379,7 +378,7 @@ TEST(TriangleWithLine, Intersection3D_4) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection3D_5) {
@@ -392,7 +391,7 @@ TEST(TriangleWithLine, Intersection3D_5) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection3D_6) {
@@ -405,7 +404,7 @@ TEST(TriangleWithLine, Intersection3D_6) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_1) {
@@ -418,7 +417,7 @@ TEST(TriangleWithLine, Intersection2D_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_2) {
@@ -431,7 +430,7 @@ TEST(TriangleWithLine, Intersection2D_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_3) {
@@ -444,7 +443,7 @@ TEST(TriangleWithLine, Intersection2D_3) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_4) {
@@ -457,7 +456,7 @@ TEST(TriangleWithLine, Intersection2D_4) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_5) {
@@ -470,7 +469,7 @@ TEST(TriangleWithLine, Intersection2D_5) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_6) {
@@ -483,7 +482,7 @@ TEST(TriangleWithLine, Intersection2D_6) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_7) {
@@ -496,7 +495,7 @@ TEST(TriangleWithLine, Intersection2D_7) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_8) {
@@ -509,7 +508,7 @@ TEST(TriangleWithLine, Intersection2D_8) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_9) {
@@ -522,7 +521,7 @@ TEST(TriangleWithLine, Intersection2D_9) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithLine, Intersection2D_10) {
@@ -535,7 +534,7 @@ TEST(TriangleWithLine, Intersection2D_10) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_line_in_3D(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithPoint, Intersection_1) {
@@ -549,7 +548,7 @@ TEST(TriangleWithPoint, Intersection_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_point(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithPoint, Intersection_2) {
@@ -563,7 +562,7 @@ TEST(TriangleWithPoint, Intersection_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_point(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithPoint, Intersection_3) {
@@ -577,7 +576,7 @@ TEST(TriangleWithPoint, Intersection_3) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_triangle_with_point(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(TriangleWithPoint, Intersection_4) {
@@ -591,7 +590,7 @@ TEST(TriangleWithPoint, Intersection_4) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_triangle_with_point(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(LineWithLine, Intersection_1) {
@@ -605,7 +604,7 @@ TEST(LineWithLine, Intersection_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_line_with_line(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(LineWithLine, Intersection_2) {
@@ -619,7 +618,7 @@ TEST(LineWithLine, Intersection_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_line_with_line(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(LineWithLine, Intersection_3) {
@@ -633,7 +632,7 @@ TEST(LineWithLine, Intersection_3) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_line_with_line(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(LineWithLine, Intersection_4) {
@@ -647,7 +646,7 @@ TEST(LineWithLine, Intersection_4) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_line_with_line(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(LineWithLine, Intersection_5) {
@@ -661,7 +660,7 @@ TEST(LineWithLine, Intersection_5) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_line_with_line(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(LineWithLine, Intersection_6) {
@@ -675,7 +674,7 @@ TEST(LineWithLine, Intersection_6) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_line_with_line(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(LineWithLine, Intersection_7) {
@@ -689,7 +688,7 @@ TEST(LineWithLine, Intersection_7) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_line_with_line(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(LineWithPoint, Intersection_1) {
@@ -703,7 +702,7 @@ TEST(LineWithPoint, Intersection_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_line_with_point(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(LineWithPoint, Intersection_2) {
@@ -717,7 +716,7 @@ TEST(LineWithPoint, Intersection_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(intersect_line_with_point(t1, t2));
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
 TEST(LineWithPoint, Intersection_3) {
@@ -731,7 +730,7 @@ TEST(LineWithPoint, Intersection_3) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(intersect_line_with_point(t1, t2));
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(PointWithPoint, Intersection_1) {
@@ -745,7 +744,7 @@ TEST(PointWithPoint, Intersection_1) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_FALSE(t1.get_a() == t2.get_a());
+  ASSERT_FALSE(check_intersection(t1, t2));
 }
 
 TEST(PointWithPoint, Intersection_2) {
@@ -759,187 +758,120 @@ TEST(PointWithPoint, Intersection_2) {
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
-  ASSERT_TRUE(t1.get_a() == t2.get_a());
+  ASSERT_TRUE(check_intersection(t1, t2));
 }
 
+//=================================================
+
+TEST(TestClassPoint, TestValid) {
+  Point p1(1.0, 2.0, 3.0);
+  Point<float> p2(NAN, 2.0, 3.0);
+
+  EXPECT_EQ(p1.get_x(), 1.0);
+  EXPECT_EQ(p1.get_y(), 2.0);
+  EXPECT_EQ(p1.get_z(), 3.0);
+  EXPECT_EQ(p1.valid(), 1);
+  EXPECT_EQ(p2.valid(), 0);
+}
+
+TEST(TestClassPoint, TestOperations) {
+  Point p1(1.0, 2.0, 3.0);
+  Point p2(-1.0, 0.0, 1.0);
+  Point p3 = p1;
+
+  EXPECT_EQ(p1 + p2, Point(0.0, 2.0, 4.0));
+  EXPECT_EQ(p1 - p2, Point(2.0, 2.0, 2.0));
+  EXPECT_EQ(p1 == p1, 1);
+  EXPECT_EQ(p3 == p1, 1);
+  EXPECT_EQ(p1 == p2, 0);
+}
+
+TEST(TestClassVector, TestValid) {
+  Point p1(1.0, 2.0, 3.0);
+  Point p2(-1.0, 0.0, 1.0);
+  Vector v1(1.0, 2.0, 3.0);
+  Vector v2(p1, p2);
+
+  EXPECT_EQ(v1.x, 1.0);
+  EXPECT_EQ(v1.y, 2.0);
+  EXPECT_EQ(v1.z, 3.0);
+  EXPECT_EQ(v1.valid(), 1);
+  EXPECT_EQ(v2.valid(), 1);
+}
+
+TEST(TestClassVector, TestOperations) {
+  Point p1(1.0, 2.0, 3.0);
+  Point p2(-1.0, 0.0, 1.0);
+  Vector v1(1.0, 2.0, 3.0);
+  Vector v2(-1.0, 0.0, 1.0);
+  Vector v3 = v1;
+  Vector v4(p1, p2);
+  Vector v5 = vector_from_point(p1);
+  double div_scalar = -1;
+  double mul_scalar = 52;
+
+  EXPECT_EQ(v1 + v2, Vector(0.0, 2.0, 4.0));
+  EXPECT_EQ(v1 - v2, Vector(2.0, 2.0, 2.0));
+
+  EXPECT_EQ(v1 == v1, 1);
+  EXPECT_EQ(v1 == v2, 0);
+  EXPECT_EQ(v1 == v3, 1);
+  EXPECT_EQ(v1 == v4, 0);
+  EXPECT_EQ(v1 == v5, 1);
+
+  EXPECT_EQ(v2 / div_scalar, Vector(1.0, 0.0, -1.0));
+  EXPECT_EQ(v2 * mul_scalar, Vector(-52.0, 0.0, 52.0));
+  EXPECT_EQ(v2.length(), sqrt(2));
+
+  EXPECT_EQ(dot(v1, v2), 2);
+  EXPECT_EQ(dot(v1, p1), 14);
+  EXPECT_EQ(dot(p1, p2), 2);
+  EXPECT_EQ(cross(v1, v2), Vector(2.0, -4.0, 2.0));
+  EXPECT_EQ(cross(v1, p1), Vector(0.0, 0.0, 0.0));
+}
+
+TEST(TestClassLine, TestValid) {
+  Point point(1.0, 2.0, 3.0);
+  Vector vector(4.0, 5.0, 6.0);
+
+  Line line(vector, point);
+  EXPECT_EQ(line.valid(), 1);
+}
+
+TEST(TestClassLine, TestOperations) {
+  Line line1(Vector(1.0, 0.0, 1.0), Point(0.0, 0.0, 0.0));
+  Line line2(Vector(1.0, 0.0, 1.0), Point(1.0, 0.0, 1.0));
+  Line line3(Vector(4.0, 0.0, 4.0), Point(-1.0, -1.0, -1.0));
+  Line line4(Vector(1.0, 2.0, 3.0), Point(4.0, 5.0, 6.0));
+  Line line5(Vector(2.0, 0.0, 2.0), Point(-1.0, 0.0, -1.0));
+
+  EXPECT_EQ(line1 == line1, 1);
+  EXPECT_EQ(line1 == line2, 1);
+  EXPECT_EQ(line1 == line3, 0);
+  EXPECT_EQ(line1 == line4, 0);
+  EXPECT_EQ(line1 == line5, 1);
+}
+
+TEST(TestClassPlane, TestOperations) {
+  Point point1(52.0, 52.0, 52.0);
+  Point point2(1.0, 0.0, 1.0);
+
+  Plane<double> plane1(0, 0, 0, 1, 0, 0, 0, 1, 0);
+  Plane<double> plane2(2, 0, -1, 2, 0, 1, 2, 1, 0);
+
+  EXPECT_EQ(plane1.get_normal(), Vector(0.0, 0.0, 1.0));
+  EXPECT_EQ(plane2.get_normal(), Vector(-2.0, 0.0, 0.0));
+
+  EXPECT_EQ(plane1 == plane1, 1);
+  EXPECT_EQ(plane1 == plane2, 0);
+  EXPECT_EQ(planes_are_parallel(plane1, plane2), 0);
+  EXPECT_EQ(planes_are_parallel(plane2, plane2), 1);
+
+  EXPECT_EQ(plane1.substitute(point1), 52);
+  EXPECT_EQ(plane2.substitute(point2), 1);
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-
-// TEST(SignedDistTest, Test1) {
-//   Plane<double> plane1(0, 0, 0, 1, 0, 0, 0, 1, 0);
-//   Plane<double> plane2(2, 1, 2.5, 2, 0, 1.5, 2, 1, 0.5);
-
-//   double signed_dist1 = plane1.substitute(2, 1, 2.5);
-//   double signed_dist2 = plane1.substitute(2, 0, 1.5);
-//   double signed_dist3 = plane1.substitute(2, 1, 0.5);
-
-//   bool result = true;
-//   if ((signed_dist1 < 0 && signed_dist2 < 0 && signed_dist3 < 0) ||
-//       (signed_dist1 > 0 && signed_dist2 > 0 && signed_dist3 > 0)) {
-//     result = false;
-//   }
-
-//   EXPECT_FALSE(result);
-// }
-
-// TEST(SignedDistTest, Test2) {
-//   Plane<double> plane1(0, 0, 0, 1, 0, 0, 0, 1, 0);
-//   Plane<double> plane2(2, 0, -1, 2, 0, 1, 2, 1, 0);
-
-//   double signed_dist11 = plane1.substitute(2, 1, -1);
-//   double signed_dist12 = plane1.substitute(2, 0, 1);
-//   double signed_dist13 = plane1.substitute(2, 1, 0);
-//   double signed_dist21 = plane2.substitute(0, 0, 0);
-//   double signed_dist22 = plane2.substitute(1, 0, 0);
-//   double signed_dist23 = plane2.substitute(0, 1, 0);
-
-//   bool result1 = true;
-//   bool result2 = true;
-//   bool result;
-
-//   if ((signed_dist11 < 0 && signed_dist12 < 0 && signed_dist13 < 0) ||
-//       (signed_dist11 > 0 && signed_dist12 > 0 && signed_dist13 > 0)) {
-//     result1 = false;
-//   }
-//   if ((signed_dist21 < 0 && signed_dist22 < 0 && signed_dist23 < 0) ||
-//       (signed_dist21 > 0 && signed_dist22 > 0 && signed_dist23 > 0)) {
-//     result2 = false;
-//   }
-
-//   result = (result1 == true) && (result2 == false);
-
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(SignedDistTest, Test3) {
-//   Plane<double> plane1(0, 0, 0, 1, 0, 0, 0, 1, 0);
-//   Plane<double> plane2(1, 1, -1, 1, 1, 1, 0.8, 0.8, 0);
-
-//   double signed_dist11 = plane1.substitute(1, 1, -1);
-//   double signed_dist12 = plane1.substitute(1, 1, 1);
-//   double signed_dist13 = plane1.substitute(0.8, 0.8, 0);
-//   double signed_dist21 = plane2.substitute(0, 0, 0);
-//   double signed_dist22 = plane2.substitute(1, 0, 0);
-//   double signed_dist23 = plane2.substitute(0, 1, 0);
-
-//   bool result1 = true;
-//   bool result2 = true;
-//   bool result;
-
-//   if ((signed_dist11 < 0 && signed_dist12 < 0 && signed_dist13 < 0) ||
-//       (signed_dist11 > 0 && signed_dist12 > 0 && signed_dist13 > 0)) {
-//     result1 = false;
-//   }
-//   if ((signed_dist21 < 0 && signed_dist22 < 0 && signed_dist23 < 0) ||
-//       (signed_dist21 > 0 && signed_dist22 > 0 && signed_dist23 > 0)) {
-//     result2 = false;
-//   }
-
-//   result = (result1 == true) && (result2 == true);
-
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(PointsEqualTest, Test1) {
-
-//   Point<double> point1(1.0, 2.0, 3.0);
-//   Point<double> point2(1.0, 2.0, 3.0);
-
-//   bool result = (point1 == point2);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(PointsEqualTest, Test2) {
-//   Point<double> point1(2.0, 2.0, 3.0);
-//   Point<double> point2(1.0, 2.0, 3.0);
-
-//   bool result = (point1 == point2);
-//   EXPECT_FALSE(result);
-// }
-
-// TEST(PointsEqualTest, Test3) {
-//   Point<double> point1(1.0000001, 2.0, 3.0);
-//   Point<double> point2(1.0000002, 2.0, 3.0);
-
-//   bool result = (point1 == point2);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(SubstitutePointInPlane, Test1) {
-//   Plane<double> plane(5, 0, 4, 0, 1, 9, 9, -1, 4);
-
-//   bool result = (plane.substitute(0, 0, 29) == 0);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(SubstitutePointInPlane, Test2) {
-//   Plane<double> plane(5, 0, 4, 0, 1, 9, 9, -1, 4);
-
-//   bool result = (plane.substitute(0, 0, 30) > 0);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(SubstitutePointInPlane, Test3) {
-//   Plane<double> plane(5, 0, 4, 0, 1, 9, 9, -1, 4);
-
-//   bool result = (plane.substitute(0, 0, 28) < 0);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(SubstitutePointInPlane, Test4) {
-//   Plane<double> plane(5, 0, 4, 0, 1, 9, 9, -1, 4);
-
-//   bool result = (plane.substitute(0, 0, -5) >= 0);
-//   EXPECT_FALSE(result);
-// }
-
-// TEST(PlanesParallel, Test1) {
-//   Plane<double> plane1(1, 0, 4, 0, 1, 4, 0, -1, 4);
-//   Plane<double> plane2(-1, 0, 3, 0, 1, 3, 1, 0, 3);
-
-//   bool result = planes_are_parallel(plane1, plane2);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(PlanesParallel, Test2) {
-//   Plane<double> plane1(1, 0, 0, 0, 1, 0, 0, -1, 0);
-//   Plane<double> plane2(-1, 0, 0, 0, 1, 0, 1, 0, 0);
-
-//   bool result = planes_are_parallel(plane1, plane2);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(PlanesParallel, Test3) {
-//   Plane<double> plane1(1, 0, 4, 0, 1, 1, 0, -1, 2);
-//   Plane<double> plane2(-1, 0, 3, 0, 1, 3, 1, 0, 3);
-
-//   bool result = planes_are_parallel(plane1, plane2);
-//   EXPECT_FALSE(result);
-// }
-
-// TEST(PlanesEqualTest, Test1) {
-//   Plane<double> plane1(1, 0, 0, 0, 1, 0, 0, -1, 0);
-//   Plane<double> plane2(-1, 0, 0, 0, 1, 0, 1, 0, 0);
-
-//   bool result = (plane1 == plane2);
-//   EXPECT_TRUE(result);
-// }
-
-// TEST(PlanesEqualTest, Test2) {
-//   Plane<double> plane1(1, 0, 2, 0, 1, 0, 0, -1, 0);
-//   Plane<double> plane2(-1, 0, 0, 0, 1, 0, 1, 0, 0);
-
-//   bool result = (plane1 == plane2);
-//   EXPECT_FALSE(result);
-// }
-
-// TEST(PlanesEqualTest, Test3) {
-//   Plane<double> plane1(1, 0, 4, 0, 1, 4, 0, -1, 4);
-//   Plane<double> plane2(-1, 0, 3, 0, 1, 3, 1, 0, 3);
-
-//   bool result = (plane1 == plane2);
-//   EXPECT_FALSE(result);
-// }

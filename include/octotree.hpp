@@ -3,6 +3,7 @@
 #include <deque>
 #include <list>
 #include <map>
+#include <math.h>
 
 #include "triangles.hpp"
 
@@ -71,14 +72,17 @@ public:
   };
 
   size_t count_depth(const size_t &triag_num) const {
-    if (triag_num < 1000)
+    if (triag_num < 1000) {
       return 0;
+    }
 
-    if (triag_num < 10000)
+    if (triag_num < 10000) {
       return 1;
+    }
 
-    if (triag_num < 100000)
+    if (triag_num < 100000) {
       return 2;
+    }
 
     return 3;
   }

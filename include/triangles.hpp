@@ -232,6 +232,17 @@ bool intersect_triangle_with_triangle_in_2D(Triangle<PointTy> &t1,
   Point<PointTy> b = t2.get_b();
   Point<PointTy> c = t2.get_c();
 
+  if (is_point_in_triangle(t1, a) || is_point_in_triangle(t1, b) ||
+      is_point_in_triangle(t1, c)) {
+    return true;
+  }
+
+  if (is_point_in_triangle(t2, t1.get_a()) ||
+      is_point_in_triangle(t2, t1.get_b()) ||
+      is_point_in_triangle(t2, t1.get_c())) {
+    return true;
+  }
+
   if (intersect_triangle_with_segment_in_2D(t1, line1, a, b) ||
       intersect_triangle_with_segment_in_2D(t1, line2, a, c) ||
       intersect_triangle_with_segment_in_2D(t1, line3, b, c)) {
@@ -309,7 +320,7 @@ bool intersect_line_with_line(const Triangle<PointTy> t1,
   auto [min2, max2] = get_triangle_space(t2);
 
   if (!point.valid()) {
-    if (equal(line1, line2)) {
+    if (line1 == line2) {
       if (check_two_segments_intersection(min1.get_x(), max1.get_x(),
                                           min2.get_x(), max2.get_x()) ||
           check_two_segments_intersection(min1.get_y(), max1.get_y(),
