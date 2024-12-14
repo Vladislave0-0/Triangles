@@ -83,6 +83,30 @@ public:
 
   Point<PointTy> get_c() const { return c; }
 
+  PointTy min_x() const {
+    return std::min(a.get_x(), std::min(b.get_x(), c.get_x()));
+  }
+
+  PointTy max_x() const {
+    return std::max(a.get_x(), std::max(b.get_x(), c.get_x()));
+  }
+
+  PointTy min_y() const {
+    return std::min(a.get_y(), std::min(b.get_y(), c.get_y()));
+  }
+
+  PointTy max_y() const {
+    return std::max(a.get_y(), std::max(b.get_y(), c.get_y()));
+  }
+
+  PointTy min_z() const {
+    return std::min(a.get_z(), std::min(b.get_z(), c.get_z()));
+  }
+
+  PointTy max_z() const {
+    return std::max(a.get_z(), std::max(b.get_z(), c.get_z()));
+  }
+
   TriangleType get_type() const { return type; }
 };
 
