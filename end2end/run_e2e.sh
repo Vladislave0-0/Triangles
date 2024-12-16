@@ -9,9 +9,12 @@ temp_result="real_ans.ans"
 
 truncate -s 0 "$temp_result"
 
+current_time_ms() {
+    echo $(($(date +%s%N) / 1000000))
+}
+
 for test_file in "$test_dir"/test*.txt; do
     base_name=$(basename "$test_file" .txt)
-
     answer_file="$answer_dir/${base_name/test/ans}.txt"
 
     if [ ! -f "$answer_file" ]; then
@@ -19,12 +22,15 @@ for test_file in "$test_dir"/test*.txt; do
         exit 1
     fi
 
+    start_time=$(current_time_ms)
     ./../build/triag < "$test_file" -l > "$temp_result"
+    end_time=$(current_time_ms)
+    elapsed_time=$((end_time - start_time))
 
     if diff -q "$answer_file" "$temp_result" > /dev/null; then
-        echo "Test $base_name passed"
+        echo "$base_name passed in ${elapsed_time} ms"
     else
-        echo "Test $base_name failed"
+        echo "$base_name failed in ${elapsed_time} ms"
         echo "Differences:"
         diff "$answer_file" "$temp_result"
     fi
