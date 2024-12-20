@@ -30,7 +30,7 @@ for test_file in "$test_dir"/test*.txt; do
     if diff -q "$answer_file" "$temp_result" > /dev/null; then
         echo "$base_name passed in ${elapsed_time} ms"
     else
-        echo "$base_name failed in ${elapsed_time} ms"
+        echo "$base_name failed"
         echo "Differences:"
         diff "$answer_file" "$temp_result"
     fi
