@@ -82,6 +82,32 @@ TEST(TriangleWithTriangle, Intersection2D_6) {
   ASSERT_FALSE(check_intersection(t1, t2));
 }
 
+TEST(TriangleWithTriangle, Intersection2D_7) {
+  Point t1p1{32.2325, 37.9572, 0.0};
+  Point t1p2{61.2708, 37.9572, 0.0};
+  Point t1p3{32.2325, 131.146, 0.0};
+  Point t2p1{42.9767, 50.6096, 0.0};
+  Point t2p2{72.015, 50.6096, 0.0};
+  Point t2p3{42.9767, 143.798, 0.0};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(check_intersection(t1, t2));
+}
+
+TEST(TriangleWithTriangle, Intersection2D_8) {
+  Point t1p1{-3.584, 3.488, 0.3};
+  Point t1p2{0.824, 2.268, 0.3};
+  Point t1p3{0.0, -1.792, 0.3};
+  Point t2p1{-1.792, 1.744, 0.3};
+  Point t2p2{0.412, 1.134, 0.3};
+  Point t2p3{0.0, -0.896, 0.3};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(check_intersection(t1, t2));
+}
+
 TEST(TriangleWithTriangle, Intersection3D_1) {
   Point t1p1{1.0, 0.0, 0.0};
   Point t1p2{0.0, 1.0, 0.0};

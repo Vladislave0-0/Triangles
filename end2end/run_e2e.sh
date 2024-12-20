@@ -2,10 +2,11 @@
 
 set -eo pipefail
 
-test_dir="./tests"
-answer_dir="./answers"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+test_dir="$script_dir/tests"
+answer_dir="$script_dir/answers"
 
-temp_result="real_ans.ans"
+temp_result="$script_dir/real_ans.ans"
 
 truncate -s 0 "$temp_result"
 
@@ -23,7 +24,7 @@ for test_file in "$test_dir"/test*.txt; do
     fi
 
     start_time=$(current_time_ms)
-    ./../build/triag < "$test_file" -l > "$temp_result"
+    "$script_dir/../build/triag" < "$test_file" -l > "$temp_result"
     end_time=$(current_time_ms)
     elapsed_time=$((end_time - start_time))
 
