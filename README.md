@@ -56,5 +56,3 @@ cd build/
   - `...`
 - **images/**: для мема в конце README:
   - `debug.png`
-
-![alt text](./images/debug.png)
