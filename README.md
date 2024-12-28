@@ -52,9 +52,9 @@ cd build/
   - `tests/`
 - **geogebra_tests/**: содержит архивы для визуализации конкретного google-теста в geogebra-3D:
   - `TrgWithTrg3D_1.ggb`
-  - `TrgWithTrg3D__2.ggb`
+  - `TrgWithTrg3D_2.ggb`
   - `...`
-  - `TrgWithLine3D__1.ggb`
+  - `TrgWithLine3D_1.ggb`
   - `...`
 - **images/**: для мема:
   - `debug.png`
