@@ -156,7 +156,7 @@ bool intersect_triangle_with_triangle_in_3D(Triangle<PointTy> &t1,
   Plane<PointTy> plane1(t1.get_a(), t1.get_b(), t1.get_c());
   Plane<PointTy> plane2(t2.get_a(), t2.get_b(), t2.get_c());
 
-  // Проверим плоскости на совпадение.
+  // Checking for plane alignment.
   if (planes_are_parallel(plane1, plane2)) {
     if ((plane1.get_D() == plane2.get_D()) ||
         (-plane1.get_D() == plane2.get_D())) {
@@ -166,8 +166,8 @@ bool intersect_triangle_with_triangle_in_3D(Triangle<PointTy> &t1,
     return false;
   }
 
-  // Если все знаковые расстояния от вершин Т2 до треугольника Т1 одного знака,
-  // значит треугольники не пересекаются.
+  // If all the sign distances from the vertices of triangle T2 to triangle T1
+  // are of the same sign, then the triangles do not intersect.
   PointTy signed_dist11 = plane1.substitute(t2.get_a());
   PointTy signed_dist21 = plane1.substitute(t2.get_b());
   PointTy signed_dist31 = plane1.substitute(t2.get_c());
@@ -176,8 +176,8 @@ bool intersect_triangle_with_triangle_in_3D(Triangle<PointTy> &t1,
     return false;
   }
 
-  // Если все знаковые расстояния от вершин Т1 до треугольника Т2 одного знака,
-  // значит треугольники не пересекаются.
+  // If all the sign distances from the vertices of triangle T1 to triangle T2
+  // are of the same sign, then the triangles do not intersect.
   PointTy signed_dist12 = plane2.substitute(t1.get_a());
   PointTy signed_dist22 = plane2.substitute(t1.get_b());
   PointTy signed_dist32 = plane2.substitute(t1.get_c());
@@ -186,18 +186,20 @@ bool intersect_triangle_with_triangle_in_3D(Triangle<PointTy> &t1,
     return false;
   }
 
-  // Тогда проверим на пересечение. Найдем прямую пересечения двух плоскостей.
+  // Then let's check their intersection. Let's find the line of intersection of
+  // two planes.
   Line<PointTy> inter_line{get_planes_intersection_vector(plane1, plane2),
                            get_planes_intersection_point(plane1, plane2)};
 
-  // Найдем интервалы пересечения треугольников с прямой пересечения плоскостей.
+  // Let's find the intervals of intersection of triangles with the line of
+  // intersection of planes.
   Interval interval1 = get_interval_of_triangle_and_line(inter_line, t1);
   Interval interval2 = get_interval_of_triangle_and_line(inter_line, t2);
   if (!interval1.valid() || !interval2.valid()) {
     return false;
   }
 
-  // Проверим, пересекаются ли интервалы.
+  // Let's check if the intervals intersect.
   return intersect_inervals(interval1, interval2);
 }
 

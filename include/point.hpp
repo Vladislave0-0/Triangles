@@ -45,8 +45,6 @@ public:
 
   Point<PointTy> operator-(const Point<PointTy> &other) const {
     Point<PointTy> sub(x - other.x, y - other.y, z - other.z);
-    // Point<PointTy> sub(other.x - x, other.y-y, other.z-z);
-
     return sub;
   }
 

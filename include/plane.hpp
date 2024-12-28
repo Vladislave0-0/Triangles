@@ -70,7 +70,7 @@ public:
   }
 
   bool operator==(const Plane<PointTy> &other) const {
-    // Проверка на совпадени плоскостей с точностью до знака
+    // Checking for alignment of planes with precision to the sign
     if ((double_cmp(A, other.A) && double_cmp(B, other.B) &&
          double_cmp(C, other.C) && double_cmp(D, other.D)) ||
         (double_cmp(-A, other.A) && double_cmp(-B, other.B) &&
