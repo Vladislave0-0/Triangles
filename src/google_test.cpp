@@ -60,19 +60,6 @@ TEST(TriangleWithTriangle, Intersection2D_5) {
   Point t1p1{0.0, 0.0, 0.0};
   Point t1p2{0.0, 1.0, 0.0};
   Point t1p3{0.0, 0.0, 1.0};
-  Point t2p1{0.0, 1.0, 0.0};
-  Point t2p2{0.0, 2.0, 0.0};
-  Point t2p3{0.0, 0.5, 1.0};
-  Triangle t1{t1p1, t1p2, t1p3};
-  Triangle t2{t2p1, t2p2, t2p3};
-
-  ASSERT_TRUE(check_intersection(t1, t2));
-}
-
-TEST(TriangleWithTriangle, Intersection2D_6) {
-  Point t1p1{0.0, 0.0, 0.0};
-  Point t1p2{0.0, 1.0, 0.0};
-  Point t1p3{0.0, 0.0, 1.0};
   Point t2p1{0.0, 1.1, 0.0};
   Point t2p2{0.0, 2.0, 0.0};
   Point t2p3{0.0, 0.5, 1.0};
@@ -82,7 +69,7 @@ TEST(TriangleWithTriangle, Intersection2D_6) {
   ASSERT_FALSE(check_intersection(t1, t2));
 }
 
-TEST(TriangleWithTriangle, Intersection2D_7) {
+TEST(TriangleWithTriangle, Intersection2D_6) {
   Point t1p1{32.2325, 37.9572, 0.0};
   Point t1p2{61.2708, 37.9572, 0.0};
   Point t1p3{32.2325, 131.146, 0.0};
@@ -95,13 +82,26 @@ TEST(TriangleWithTriangle, Intersection2D_7) {
   ASSERT_TRUE(check_intersection(t1, t2));
 }
 
-TEST(TriangleWithTriangle, Intersection2D_8) {
+TEST(TriangleWithTriangle, Intersection2D_7) {
   Point t1p1{-3.584, 3.488, 0.3};
   Point t1p2{0.824, 2.268, 0.3};
   Point t1p3{0.0, -1.792, 0.3};
   Point t2p1{-1.792, 1.744, 0.3};
   Point t2p2{0.412, 1.134, 0.3};
   Point t2p3{0.0, -0.896, 0.3};
+  Triangle t1{t1p1, t1p2, t1p3};
+  Triangle t2{t2p1, t2p2, t2p3};
+
+  ASSERT_TRUE(check_intersection(t1, t2));
+}
+
+TEST(TriangleWithTriangle, Intersection2D_8) {
+  Point t1p1{21.4883, 118.493, 0.0};
+  Point t1p2{50.5266, 118.493, 0.0};
+  Point t1p3{21.4883, 211.6812, 0.0};
+  Point t2p1{32.2325, 37.9572, 0.0};
+  Point t2p2{61.2708, 37.9572, 0.0};
+  Point t2p3{32.2325, 131.146, 0.0};
   Triangle t1{t1p1, t1p2, t1p3};
   Triangle t2{t2p1, t2p2, t2p3};
 
@@ -550,19 +550,6 @@ TEST(TriangleWithLine, Intersection2D_9) {
   ASSERT_FALSE(check_intersection(t1, t2));
 }
 
-TEST(TriangleWithLine, Intersection2D_10) {
-  Point t1p1{21.4883, 118.493, 0.0};
-  Point t1p2{50.5266, 118.493, 0.0};
-  Point t1p3{21.4883, 211.6812, 0.0};
-  Point t2p1{32.2325, 37.9572, 0.0};
-  Point t2p2{61.2708, 37.9572, 0.0};
-  Point t2p3{32.2325, 131.146, 0.0};
-  Triangle t1{t1p1, t1p2, t1p3};
-  Triangle t2{t2p1, t2p2, t2p3};
-
-  ASSERT_TRUE(check_intersection(t1, t2));
-}
-
 TEST(TriangleWithPoint, Intersection_1) {
   Point t1p1{-0.5, 0.0, 2.0};
   Point t1p2{-0.5, 0.0, 0.0};
@@ -634,20 +621,6 @@ TEST(LineWithLine, Intersection_1) {
 }
 
 TEST(LineWithLine, Intersection_2) {
-  Point t1p1{0.0, 1.0, 0.0};
-  Point t1p2{-0.5, 1.5, 0.0};
-  Point t1p3{-0.5, 1.5, 0.0};
-  Point t2p1{0.0, 0.0, 0.0};
-  Point t2p2{1.0, 1.0, 0.0};
-  Point t2p3{2.0, 2.0, 0.0};
-
-  Triangle t1{t1p1, t1p2, t1p3};
-  Triangle t2{t2p1, t2p2, t2p3};
-
-  ASSERT_FALSE(check_intersection(t1, t2));
-}
-
-TEST(LineWithLine, Intersection_3) {
   Point t1p1{1.0, 0.0, 0.0};
   Point t1p2{-0.5, 1.5, 0.0};
   Point t1p3{-0.5, 1.5, 0.0};
@@ -661,7 +634,7 @@ TEST(LineWithLine, Intersection_3) {
   ASSERT_TRUE(check_intersection(t1, t2));
 }
 
-TEST(LineWithLine, Intersection_4) {
+TEST(LineWithLine, Intersection_3) {
   Point t1p1{0.5, 0.5, 0.0};
   Point t1p2{-0.5, 1.5, 0.0};
   Point t1p3{-0.5, 1.5, 0.0};
@@ -675,7 +648,7 @@ TEST(LineWithLine, Intersection_4) {
   ASSERT_TRUE(check_intersection(t1, t2));
 }
 
-TEST(LineWithLine, Intersection_5) {
+TEST(LineWithLine, Intersection_4) {
   Point t1p1{2.0, 2.0, 0.0};
   Point t1p2{3.0, 3.0, 0.0};
   Point t1p3{3.0, 3.0, 0.0};
@@ -689,7 +662,7 @@ TEST(LineWithLine, Intersection_5) {
   ASSERT_FALSE(check_intersection(t1, t2));
 }
 
-TEST(LineWithLine, Intersection_6) {
+TEST(LineWithLine, Intersection_5) {
   Point t1p1{2.0, 2.0, 0.0};
   Point t1p2{3.0, 3.0, 0.0};
   Point t1p3{3.0, 3.0, 0.0};
@@ -703,7 +676,7 @@ TEST(LineWithLine, Intersection_6) {
   ASSERT_TRUE(check_intersection(t1, t2));
 }
 
-TEST(LineWithLine, Intersection_7) {
+TEST(LineWithLine, Intersection_6) {
   Point t1p1{2.0, 2.0, 0.0};
   Point t1p2{3.0, 3.0, 0.0};
   Point t1p3{3.0, 3.0, 0.0};
