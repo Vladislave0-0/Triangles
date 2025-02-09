@@ -21,7 +21,9 @@ gtest_discover_tests(
 
 add_test(
     NAME end2end_tests
-    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/end2end/run_e2e.sh
+    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/end2end/run_e2e.sh 
+        -b $<TARGET_FILE:triag>
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/end2end
 )
 
 add_custom_target(run_all_tests
