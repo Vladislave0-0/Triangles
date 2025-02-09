@@ -61,6 +61,7 @@ template <typename PointTy = float> class Octotree {
   size_t depth = 0;
   size_t cells_num = 0;
   size_t triag_num = 0;
+  int axis = 0;
 
 public:
   Octotree(const std::list<Triangle<PointTy>> &triangles,
@@ -90,8 +91,6 @@ public:
   const std::deque<BoundingBox<PointTy>> &get_cells() { return cells; }
 
   void divide_cell() {
-    static int axis = 0;
-
     std::list<Triangle<PointTy>> plus;
     std::list<Triangle<PointTy>> minus;
 
