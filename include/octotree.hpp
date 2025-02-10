@@ -1,27 +1,26 @@
 #pragma once
 
 #include <deque>
-#include <list>
+#include <vector>
 #include <map>
 #include <math.h>
 
 #include "triangles.hpp"
 
 template <typename PointTy = double> class BoundingBox {
-  std::list<Triangle<PointTy>> incell;
+  std::vector<Triangle<PointTy>> trg_in_cell;
 
-  Vector<PointTy> min;
-  Vector<PointTy> max;
+  Vector<PointTy> min, max;
 
 public:
-  BoundingBox(const std::list<Triangle<PointTy>> &triangles)
-      : incell(triangles) {
-    auto it = incell.begin();
+  BoundingBox(const std::vector<Triangle<PointTy>> &triangles)
+      : trg_in_cell(triangles) {
+    auto it = trg_in_cell.begin();
     min.x = max.x = it->min_x();
     min.y = max.y = it->min_y();
     min.z = max.z = it->min_z();
 
-    for (; it != incell.end(); ++it) {
+    for (; it != trg_in_cell.end(); ++it) {
       max.x = std::max(max.x, it->max_x());
       min.x = std::min(min.x, it->min_x());
       max.y = std::max(max.y, it->max_y());
@@ -37,14 +36,14 @@ public:
 
   PointTy average_z() const { return (max.z + min.z) / 2; }
 
-  std::list<Triangle<PointTy>> &get_incell() { return incell; }
+  std::vector<Triangle<PointTy>> &get_trg_in_cell() { return trg_in_cell; }
 
   void group_intersections(std::map<size_t, size_t> &result) {
-    for (auto one = incell.begin(); one != incell.end(); ++one) {
+    for (auto one = trg_in_cell.begin(); one != trg_in_cell.end(); ++one) {
       auto it = one;
       it++;
 
-      for (auto two = it; two != incell.end(); ++two) {
+      for (auto two = it; two != trg_in_cell.end(); ++two) {
         if (check_intersection(*one, *two)) {
           result[(*one).id] = (*one).id;
           result[(*two).id] = (*two).id;
@@ -55,7 +54,7 @@ public:
 };
 
 template <typename PointTy = float> class Octotree {
-  std::list<Triangle<PointTy>> input;
+  std::vector<Triangle<PointTy>> input;
   std::deque<BoundingBox<PointTy>> cells;
 
   size_t depth = 0;
@@ -64,7 +63,7 @@ template <typename PointTy = float> class Octotree {
   int axis = 0;
 
 public:
-  Octotree(const std::list<Triangle<PointTy>> &triangles,
+  Octotree(const std::vector<Triangle<PointTy>> &triangles,
            const size_t triag_num)
       : input(triangles), triag_num(triag_num) {
     cells.push_back(BoundingBox<PointTy>(input));
@@ -91,8 +90,8 @@ public:
   const std::deque<BoundingBox<PointTy>> &get_cells() { return cells; }
 
   void divide_cell() {
-    std::list<Triangle<PointTy>> plus;
-    std::list<Triangle<PointTy>> minus;
+    std::vector<Triangle<PointTy>> plus;
+    std::vector<Triangle<PointTy>> minus;
 
     size_t copy_num_of_cells = cells_num;
 
@@ -102,7 +101,7 @@ public:
       size_t nod = axis % 3;
       PointTy average = calculate_average(front_groups, nod);
 
-      for (const auto &it : front_groups.get_incell()) {
+      for (const auto &it : front_groups.get_trg_in_cell()) {
         PointTy coordinates[3][3] = {
             it.get_a().get_x(), it.get_b().get_x(), it.get_c().get_x(),
             it.get_a().get_y(), it.get_b().get_y(), it.get_c().get_y(),
@@ -119,7 +118,7 @@ public:
         }
       }
 
-      if (plus.size() + minus.size() < front_groups.get_incell().size() * 2) {
+      if (plus.size() + minus.size() < front_groups.get_trg_in_cell().size() * 2) {
         if (!plus.empty()) {
           cells.push_back(BoundingBox<PointTy>(plus));
           ++cells_num;

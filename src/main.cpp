@@ -3,7 +3,7 @@
 int main() {
   using PointTy = double;
 
-  std::list<Triangle<PointTy>> input;
+  std::vector<Triangle<PointTy>> input;
   size_t triag_num = 0;
   std::cin >> triag_num;
 
@@ -26,7 +26,7 @@ int main() {
   std::deque<BoundingBox<PointTy>> octotree_cells = octotree.get_cells();
 
   for (auto it : octotree_cells) {
-    std::list<Triangle<PointTy>> cur_cell = it.get_incell();
+    std::vector<Triangle<PointTy>> cur_cell = it.get_trg_in_cell();
     it.group_intersections(result);
   }
 
