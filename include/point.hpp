@@ -43,9 +43,14 @@ public:
     return add;
   }
 
-  Point<PointTy> operator-(const Point<PointTy> &other) const {
-    Point<PointTy> sub(x - other.x, y - other.y, z - other.z);
+  Vector<PointTy> operator-(const Point<PointTy> &other) const {
+    Vector<PointTy> sub(x - other.x, y - other.y, z - other.z);
     return sub;
+  }
+
+  Point<PointTy> operator*(const PointTy scalar) const {
+    Point<PointTy> scalar_mul(x * scalar, y * scalar, z * scalar);
+    return scalar_mul;
   }
 
   void operator=(const Point<PointTy> &other) {
@@ -54,6 +59,12 @@ public:
     z = other.z;
   }
 };
+
+template <typename PointTy = double>
+Point<PointTy> point_from_vector(const Vector<PointTy> &vector) {
+  Point<PointTy> point{vector.x, vector.y, vector.z};
+  return point;
+}
 
 template <typename PointTy = double>
 bool three_points_on_one_line(const Point<PointTy> &a, const Point<PointTy> &b,

@@ -23,7 +23,7 @@ public:
 
   bool operator==(const Line<PointTy> &other) const {
     Vector<PointTy> cross_res =
-        cross(vector_from_point(point - other.point), other.vector);
+        cross(point - other.point, other.vector);
     if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
         double_cmp(cross_res.z, 0.0)) {
       return true;
@@ -71,9 +71,7 @@ Point<PointTy> intersect_line_with_line(const Line<PointTy> &line1,
     return point;
 
   // Lines on one plane
-  point = {-line2.vector.x * t + line2.point.get_x(),
-           -line2.vector.y * t + line2.point.get_y(),
-           -line2.vector.z * t + line2.point.get_z()};
+  point = point_from_vector(line2.vector) * (-t) + line2.point;
 
   return point;
 }
@@ -86,13 +84,13 @@ Line<PointTy> get_line_from_triangle(const Triangle<PointTy> t) {
     return line;
 
   if (t.get_a() == t.get_b()) {
-    line.vector = vector_from_point(t.get_c() - t.get_a());
+    line.vector = t.get_c() - t.get_a();
     line.point = t.get_a();
   } else if (t.get_a() == t.get_c()) {
-    line.vector = vector_from_point(t.get_b() - t.get_a());
+    line.vector = t.get_b() - t.get_a();
     line.point = t.get_a();
   } else {
-    line.vector = vector_from_point(t.get_c() - t.get_a());
+    line.vector = t.get_c() - t.get_a();
     line.point = t.get_a();
   }
 
@@ -106,7 +104,7 @@ bool intersect_line_with_point(const Triangle<PointTy> t1,
   Point<PointTy> point = t2.get_a();
 
   Vector<PointTy> cross_res =
-      cross(vector_from_point(point - line.point), line.vector);
+      cross(point - line.point, line.vector);
   if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
       double_cmp(cross_res.z, 0.0)) {
     return true;

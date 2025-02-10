@@ -11,7 +11,7 @@ public:
   Vector(PointTy x, PointTy y, PointTy z) : x(x), y(y), z(z) {}
 
   Vector(const Point<PointTy> &point1, const Point<PointTy> &point2) {
-    Point<PointTy> point = point1 - point2;
+    Point<PointTy> point = point_from_vector(point1 - point2);
 
     x = point.get_x();
     y = point.get_y();

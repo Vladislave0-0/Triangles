@@ -779,7 +779,7 @@ TEST(TestClassPoint, TestOperations) {
   Point p3 = p1;
 
   EXPECT_EQ(p1 + p2, Point(0.0, 2.0, 4.0));
-  EXPECT_EQ(p1 - p2, Point(2.0, 2.0, 2.0));
+  EXPECT_EQ(point_from_vector(p1 - p2), Point(2.0, 2.0, 2.0));
   EXPECT_EQ(p1 == p1, 1);
   EXPECT_EQ(p3 == p1, 1);
   EXPECT_EQ(p1 == p2, 0);

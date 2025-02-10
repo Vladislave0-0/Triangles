@@ -207,11 +207,11 @@ template <typename PointTy = double>
 Interval<PointTy>
 get_interval_of_triangle_and_line(const Line<PointTy> &inter_line,
                                   const Triangle<PointTy> &triangle) {
-  Line<PointTy> line1{vector_from_point(triangle.get_b() - triangle.get_a()),
+  Line<PointTy> line1{triangle.get_b() - triangle.get_a(),
                       triangle.get_a()};
-  Line<PointTy> line2{vector_from_point(triangle.get_c() - triangle.get_a()),
+  Line<PointTy> line2{triangle.get_c() - triangle.get_a(),
                       triangle.get_a()};
-  Line<PointTy> line3{vector_from_point(triangle.get_c() - triangle.get_b()),
+  Line<PointTy> line3{triangle.get_c() - triangle.get_b(),
                       triangle.get_b()};
 
   Point<PointTy> inter_point1 = intersect_line_with_line(inter_line, line1);
@@ -226,9 +226,9 @@ get_interval_of_triangle_and_line(const Line<PointTy> &inter_line,
 template <typename PointTy = double>
 bool intersect_triangle_with_triangle_in_2D(Triangle<PointTy> &t1,
                                             Triangle<PointTy> &t2) {
-  Line<PointTy> line1{vector_from_point(t2.get_b() - t2.get_a()), t2.get_a()};
-  Line<PointTy> line2{vector_from_point(t2.get_c() - t2.get_a()), t2.get_a()};
-  Line<PointTy> line3{vector_from_point(t2.get_c() - t2.get_b()), t2.get_b()};
+  Line<PointTy> line1{t2.get_b() - t2.get_a(), t2.get_a()};
+  Line<PointTy> line2{t2.get_c() - t2.get_a(), t2.get_a()};
+  Line<PointTy> line3{t2.get_c() - t2.get_b(), t2.get_b()};
 
   Point<PointTy> a = t2.get_a();
   Point<PointTy> b = t2.get_b();
@@ -259,8 +259,8 @@ bool intersect_triangle_with_line_in_3D(const Triangle<PointTy> &t1,
                                         const Triangle<PointTy> &t2) {
   Line<PointTy> line = get_line_from_triangle(t2);
 
-  Vector<PointTy> e1 = vector_from_point(t1.get_b() - t1.get_a());
-  Vector<PointTy> e2 = vector_from_point(t1.get_c() - t1.get_a());
+  Vector<PointTy> e1 = t1.get_b() - t1.get_a();
+  Vector<PointTy> e2 = t1.get_c() - t1.get_a();
 
   Vector<PointTy> p = cross(line.vector, e2);
   PointTy det = dot(p, e1);
@@ -270,7 +270,7 @@ bool intersect_triangle_with_line_in_3D(const Triangle<PointTy> &t1,
         t1, line, get_triangle_space(t2).first, get_triangle_space(t2).second);
   }
 
-  Vector<PointTy> s = vector_from_point(line.point - t1.get_a());
+  Vector<PointTy> s = line.point - t1.get_a();
   PointTy u = dot(s, p) / det;
   if (u < 0.0 || u > 1.0)
     return false;
@@ -382,21 +382,21 @@ bool intersect_triangle_with_segment_in_2D(const Triangle<PointTy> &t,
                                            const Line<PointTy> &line,
                                            const Point<PointTy> &seg_min,
                                            const Point<PointTy> &seg_max) {
-  Line<PointTy> line1{vector_from_point(t.get_b() - t.get_a()), t.get_a()};
+  Line<PointTy> line1{t.get_b() - t.get_a(), t.get_a()};
   Point<PointTy> point1 = intersect_line_with_line(line, line1);
   if (check_if_inter_point_belongs_sides(t.get_a(), t.get_b(), seg_min, seg_max,
                                          point1)) {
     return true;
   }
 
-  Line<PointTy> line2{vector_from_point(t.get_c() - t.get_a()), t.get_a()};
+  Line<PointTy> line2{t.get_c() - t.get_a(), t.get_a()};
   Point<PointTy> point2 = intersect_line_with_line(line, line2);
   if (check_if_inter_point_belongs_sides(t.get_a(), t.get_c(), seg_min, seg_max,
                                          point2)) {
     return true;
   }
 
-  Line<PointTy> line3{vector_from_point(t.get_c() - t.get_b()), t.get_b()};
+  Line<PointTy> line3{t.get_c() - t.get_b(), t.get_b()};
   Point<PointTy> point3 = intersect_line_with_line(line, line3);
   if (check_if_inter_point_belongs_sides(t.get_b(), t.get_c(), seg_min, seg_max,
                                          point3)) {
