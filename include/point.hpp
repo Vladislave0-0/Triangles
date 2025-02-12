@@ -15,11 +15,16 @@ public:
     return !std::isnan(x) && !std::isnan(y) && !std::isnan(z);
   }
 
+  bool valid(const Point<PointTy> &point) const {
+    return !std::isnan(point.get_x()) && !std::isnan(point.get_y()) &&
+           !std::isnan(point.get_z());
+  }
+
   PointTy get_x() const { return x; }
   PointTy get_y() const { return y; }
   PointTy get_z() const { return z; }
 
-  Point() = default;
+  Point() = default; 
 
   Point(PointTy x, PointTy y, PointTy z) : x(x), y(y), z(z){};
 
@@ -33,10 +38,7 @@ public:
 
   PointTy norm() const { return x * x + y * y + z * z; }
 
-  bool operator==(const Point<PointTy> &other) const {
-    return double_cmp(x, other.x) && double_cmp(y, other.y) &&
-           double_cmp(z, other.z);
-  }
+  bool operator==(const Point<PointTy> &other) const = default;
 
   Point<PointTy> operator+(const Point<PointTy> &other) const {
     Point<PointTy> add(x + other.x, y + other.y, z + other.z);
@@ -52,13 +54,22 @@ public:
     Point<PointTy> scalar_mul(x * scalar, y * scalar, z * scalar);
     return scalar_mul;
   }
-
-  void operator=(const Point<PointTy> &other) {
-    x = other.x;
-    y = other.y;
-    z = other.z;
-  }
 };
+
+template <typename PointTy = double> bool valid(const Point<PointTy> &point) {
+  return !std::isnan(point.get_x()) && !std::isnan(point.get_y()) &&
+         !std::isnan(point.get_z());
+}
+
+template <typename PointTy = double>
+bool is_equal(const Point<PointTy> &point1, const Point<PointTy> &point2) {
+  if (!valid(point1) || !valid(point2))
+    return false;
+
+  return double_cmp(point1.get_x(), point2.get_x()) &&
+         double_cmp(point1.get_y(), point2.get_y()) &&
+         double_cmp(point1.get_z(), point2.get_z());
+}
 
 template <typename PointTy = double>
 Point<PointTy> point_from_vector(const Vector<PointTy> &vector) {

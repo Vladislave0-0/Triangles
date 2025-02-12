@@ -65,17 +65,22 @@ Interval<PointTy> get_valid_interval_of_triangle_and_line(
   if (is_point_in_triangle(triangle, inter_point2))
     valid_points.push_back(inter_point2);
 
-  if (is_point_in_triangle(triangle, inter_point3))
+  if (is_point_in_triangle(triangle, inter_point3)) {
     valid_points.push_back(inter_point3);
+  }
 
-  if (valid_points.size() == 2) {
+  if (valid_points.size() == 2)
     return Interval<PointTy>{valid_points[0], valid_points[1]};
-  } else if (valid_points.size() == 3) {
-    if (valid_points[0] == valid_points[1])
+
+  if (valid_points.size() == 3) {
+    if (is_equal(valid_points[0], valid_points[1])) {
       return Interval<PointTy>{valid_points[0], valid_points[2]};
-    if ((valid_points[0] == valid_points[2]) ||
-        (valid_points[1] == valid_points[2]))
+    }
+
+    if ((is_equal(valid_points[0], valid_points[2])) ||
+        (is_equal(valid_points[1], valid_points[2]))) {
       return Interval<PointTy>{valid_points[0], valid_points[1]};
+    }
   }
 
   return Interval<PointTy>{};

@@ -20,10 +20,10 @@ private:
     if (!a.valid() || !b.valid() || !c.valid())
       return;
 
-    if (a == b && b == c) {
+    if (is_equal(a, b) && is_equal(b, c)) {
       type = POINT;
       return;
-    } else if (a == b || b == c || a == c ||
+    } else if (is_equal(a, b) || is_equal(b, c) || is_equal(a, c) ||
                three_points_on_one_line(a, b, c)) {
       type = LINE;
       return;
@@ -144,7 +144,7 @@ bool check_intersection(Triangle<PointTy> &t1, Triangle<PointTy> &t2) {
   }
 
   if (type1 == TYPE::POINT && type2 == TYPE::POINT) {
-    return t1.get_a() == t2.get_a();
+    return is_equal(t1.get_a(), t2.get_a());
   }
 
   return false;
@@ -207,12 +207,9 @@ template <typename PointTy = double>
 Interval<PointTy>
 get_interval_of_triangle_and_line(const Line<PointTy> &inter_line,
                                   const Triangle<PointTy> &triangle) {
-  Line<PointTy> line1{triangle.get_b() - triangle.get_a(),
-                      triangle.get_a()};
-  Line<PointTy> line2{triangle.get_c() - triangle.get_a(),
-                      triangle.get_a()};
-  Line<PointTy> line3{triangle.get_c() - triangle.get_b(),
-                      triangle.get_b()};
+  Line<PointTy> line1{triangle.get_b() - triangle.get_a(), triangle.get_a()};
+  Line<PointTy> line2{triangle.get_c() - triangle.get_a(), triangle.get_a()};
+  Line<PointTy> line3{triangle.get_c() - triangle.get_b(), triangle.get_b()};
 
   Point<PointTy> inter_point1 = intersect_line_with_line(inter_line, line1);
   Point<PointTy> inter_point2 = intersect_line_with_line(inter_line, line2);
@@ -220,6 +217,7 @@ get_interval_of_triangle_and_line(const Line<PointTy> &inter_line,
 
   Interval interval = get_valid_interval_of_triangle_and_line(
       triangle, inter_point1, inter_point2, inter_point3);
+
   return interval;
 }
 

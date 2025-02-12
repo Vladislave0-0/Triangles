@@ -2,7 +2,7 @@
 
 #include "../include/triangles.hpp"
 
-bool double_cmp(double x, double y) { return fabs(x - y) < _epsilon; }
+bool double_cmp(double x, double y) { return fabs(x - y) < epsilon_; }
 
 TEST(TriangleWithTriangle, Intersection2D_1) {
   Point t1p1{0.4, -5.0, 0.0};
@@ -780,9 +780,9 @@ TEST(TestClassPoint, TestOperations) {
 
   EXPECT_EQ(p1 + p2, Point(0.0, 2.0, 4.0));
   EXPECT_EQ(point_from_vector(p1 - p2), Point(2.0, 2.0, 2.0));
-  EXPECT_EQ(p1 == p1, 1);
-  EXPECT_EQ(p3 == p1, 1);
-  EXPECT_EQ(p1 == p2, 0);
+  EXPECT_EQ(is_equal(p1, p1), 1);
+  EXPECT_EQ(is_equal(p3, p1), 1);
+  EXPECT_EQ(is_equal(p1, p2), 0);
 }
 
 TEST(TestClassVector, TestValid) {
@@ -823,10 +823,10 @@ TEST(TestClassVector, TestOperations) {
   EXPECT_EQ(v2.length(), sqrt(2));
 
   EXPECT_EQ(dot(v1, v2), 2);
-  EXPECT_EQ(dot(v1, p1), 14);
-  EXPECT_EQ(dot(p1, p2), 2);
   EXPECT_EQ(cross(v1, v2), Vector(2.0, -4.0, 2.0));
-  EXPECT_EQ(cross(v1, p1), Vector(0.0, 0.0, 0.0));
+  EXPECT_EQ(dot(v1, vector_from_point(p1)), 14);
+  EXPECT_EQ(dot(vector_from_point(p1), vector_from_point(p2)), 2);
+  EXPECT_EQ(cross(v1, vector_from_point(p1)), Vector(0.0, 0.0, 0.0));
 }
 
 TEST(TestClassLine, TestValid) {

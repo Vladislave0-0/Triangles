@@ -80,20 +80,14 @@ public:
 };
 
 template <typename PointTy = double>
+Vector<PointTy> vector_from_point(const Point<PointTy> &point) {
+  Vector<PointTy> vector{point.get_x(), point.get_y(), point.get_z()};
+  return vector;
+}
+
+template <typename PointTy = double>
 PointTy dot(const Vector<PointTy> &vector1, const Vector<PointTy> &vector2) {
   return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
-}
-
-template <typename PointTy = double>
-PointTy dot(const Vector<PointTy> &vector, const Point<PointTy> &point) {
-  return vector.x * point.get_x() + vector.y * point.get_y() +
-         vector.z * point.get_z();
-}
-
-template <typename PointTy = double>
-PointTy dot(const Point<PointTy> &point1, const Point<PointTy> &point2) {
-  return point1.get_x() * point2.get_x() + point1.get_y() * point2.get_y() +
-         point1.get_z() * point2.get_z();
 }
 
 template <typename PointTy = double>
@@ -102,20 +96,5 @@ Vector<PointTy> cross(const Vector<PointTy> &vector1,
   Vector<PointTy> vector(vector1.y * vector2.z - vector1.z * vector2.y,
                          vector1.z * vector2.x - vector1.x * vector2.z,
                          vector1.x * vector2.y - vector1.y * vector2.x);
-  return vector;
-}
-
-template <typename PointTy = double>
-Vector<PointTy> cross(const Vector<PointTy> &vector,
-                      const Point<PointTy> &point) {
-  Vector<PointTy> vec(vector.y * point.get_z() - vector.z * point.get_y(),
-                      vector.z * point.get_x() - vector.x * point.get_z(),
-                      vector.x * point.get_y() - vector.y * point.get_x());
-  return vec;
-}
-
-template <typename PointTy = double>
-Vector<PointTy> vector_from_point(const Point<PointTy> &point) {
-  Vector<PointTy> vector{point.get_x(), point.get_y(), point.get_z()};
   return vector;
 }

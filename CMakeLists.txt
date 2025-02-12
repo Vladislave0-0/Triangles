@@ -4,6 +4,9 @@ project("Triangles")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+
 
 include_directories(include/)
 add_executable(triag src/main.cpp src/config.cpp)

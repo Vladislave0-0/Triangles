@@ -83,10 +83,10 @@ Line<PointTy> get_line_from_triangle(const Triangle<PointTy> t) {
   if (t.get_type() != Triangle<PointTy>::LINE)
     return line;
 
-  if (t.get_a() == t.get_b()) {
+  if (is_equal(t.get_a(), t.get_b())) {
     line.vector = t.get_c() - t.get_a();
     line.point = t.get_a();
-  } else if (t.get_a() == t.get_c()) {
+  } else if (is_equal(t.get_a(), t.get_c())) {
     line.vector = t.get_b() - t.get_a();
     line.point = t.get_a();
   } else {
