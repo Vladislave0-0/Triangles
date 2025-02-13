@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-
 #include "point.hpp"
 
+namespace triangle {
 template <typename PointTy> class Triangle;
 
 template <typename PointTy = double> class Interval {
@@ -18,7 +18,7 @@ public:
     this->p2 = p2;
   }
 
-  bool valid() const { return p1.valid() && p2.valid(); }
+  bool valid() const { return triangle::valid(p1) && triangle::valid(p2); }
 
   Point<PointTy> get_p1() const { return p1; }
 
@@ -34,14 +34,14 @@ public:
 };
 
 template <typename PointTy = double>
-bool intersect_inervals(Interval<PointTy> &int1, Interval<PointTy> &int2) {
-  PointTy int1_min = std::min(int1.get_p1().get_x(), int1.get_p2().get_x());
-  PointTy int1_max = std::max(int1.get_p1().get_x(), int1.get_p2().get_x());
-  PointTy int2_min = std::min(int2.get_p1().get_x(), int2.get_p2().get_x());
-  PointTy int2_max = std::max(int2.get_p1().get_x(), int2.get_p2().get_x());
+bool intersect_intervals(Interval<PointTy> &int1, Interval<PointTy> &int2) {
+  PointTy int1_min = std::min(int1.get_p1().x, int1.get_p2().x);
+  PointTy int1_max = std::max(int1.get_p1().x, int1.get_p2().x);
+  PointTy int2_min = std::min(int2.get_p1().x, int2.get_p2().x);
+  PointTy int2_max = std::max(int2.get_p1().x, int2.get_p2().x);
 
-  if (double_cmp(int1_min, int2_min) || double_cmp(int1_min, int2_max) ||
-      double_cmp(int1_max, int2_min) || double_cmp(int1_max, int2_max)) {
+  if (cmp(int1_min, int2_min) || cmp(int1_min, int2_max) ||
+      cmp(int1_max, int2_min) || cmp(int1_max, int2_max)) {
     return true;
   }
   if ((int1_min >= int2_min && int1_min <= int2_max) ||
@@ -59,13 +59,13 @@ Interval<PointTy> get_valid_interval_of_triangle_and_line(
     const Point<PointTy> &inter_point2, const Point<PointTy> &inter_point3) {
   std::vector<Point<PointTy>> valid_points;
 
-  if (is_point_in_triangle(triangle, inter_point1))
+  if (point_in_triangle(triangle, inter_point1))
     valid_points.push_back(inter_point1);
 
-  if (is_point_in_triangle(triangle, inter_point2))
+  if (point_in_triangle(triangle, inter_point2))
     valid_points.push_back(inter_point2);
 
-  if (is_point_in_triangle(triangle, inter_point3)) {
+  if (point_in_triangle(triangle, inter_point3)) {
     valid_points.push_back(inter_point3);
   }
 
@@ -73,15 +73,16 @@ Interval<PointTy> get_valid_interval_of_triangle_and_line(
     return Interval<PointTy>{valid_points[0], valid_points[1]};
 
   if (valid_points.size() == 3) {
-    if (is_equal(valid_points[0], valid_points[1])) {
+    if (equal(valid_points[0], valid_points[1])) {
       return Interval<PointTy>{valid_points[0], valid_points[2]};
     }
 
-    if ((is_equal(valid_points[0], valid_points[2])) ||
-        (is_equal(valid_points[1], valid_points[2]))) {
+    if ((equal(valid_points[0], valid_points[2])) ||
+        (equal(valid_points[1], valid_points[2]))) {
       return Interval<PointTy>{valid_points[0], valid_points[1]};
     }
   }
 
   return Interval<PointTy>{};
 }
+} // namespace triangle

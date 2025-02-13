@@ -2,86 +2,48 @@
 
 #include "point.hpp"
 
-template <typename PointTy = double> class Vector {
-public:
-  PointTy x, y, z = NAN;
+namespace triangle {
 
-  Vector() = default;
-
-  Vector(PointTy x, PointTy y, PointTy z) : x(x), y(y), z(z) {}
-
-  Vector(const Point<PointTy> &point1, const Point<PointTy> &point2) {
-    Point<PointTy> point = point_from_vector(point1 - point2);
-
-    x = point.get_x();
-    y = point.get_y();
-    z = point.get_z();
-  }
-
-  bool valid() const {
-    return !std::isnan(x) && !std::isnan(y) && !std::isnan(z);
-  }
-
-  PointTy length() const { return std::sqrt(x * x + y * y + z * z); }
+template <typename PointTy = double> struct Vector {
+  PointTy x = NAN, y = NAN, z = NAN;
 
   void print() const {
     std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
   }
 
   void normalize() {
-    PointTy len = length();
-    if (!double_cmp(len, 0.0)) {
-      x = x / len;
-      y = y / len;
-      z = z / len;
-    }
-  }
+    PointTy normal_length = std::sqrt(x * x + y * y + z * z);
 
-  Vector<PointTy> operator+(const Vector<PointTy> &other) const {
-    Vector<PointTy> add(x + other.x, y + other.y, z + other.z);
-    return add;
-  }
-
-  Vector<PointTy> operator-(const Vector<PointTy> &other) const {
-    Vector<PointTy> sub(x - other.x, y - other.y, z - other.z);
-    return sub;
-  }
-
-  Vector<PointTy> operator*(const PointTy scalar) const {
-    Vector<PointTy> scalar_mul(x * scalar, y * scalar, z * scalar);
-    return scalar_mul;
-  }
-
-  Vector<PointTy> operator/(const PointTy scalar) const {
-    Vector<PointTy> scalar_div(x / scalar, y / scalar, z / scalar);
-    return scalar_div;
-  }
-
-  bool operator==(const Vector<PointTy> &other) const {
-    if (double_cmp(x, other.x) && double_cmp(y, other.y) &&
-        double_cmp(z, other.z)) {
-      return true;
+    if (cmp(normal_length, 0.0)) {
+      std::cerr << "The degenerate vector" << std::endl;
+      return;
     }
 
-    return false;
+    x = x / normal_length;
+    y = y / normal_length;
+    z = z / normal_length;
   }
 
-  void operator=(const Vector<PointTy> &other) {
-    x = other.x;
-    y = other.y;
-    z = other.z;
-  }
-
-  void operator=(const Point<PointTy> &other) {
-    x = other.x;
-    y = other.y;
-    z = other.z;
-  }
+  bool operator==(const Vector<PointTy> &other) const = default;
 };
+
+template <typename PointTy = double> bool valid(const Vector<PointTy> &vector) {
+  return !std::isnan(vector.x) && !std::isnan(vector.y) &&
+         !std::isnan(vector.z);
+}
+
+template <typename PointTy = double>
+bool equal(const Vector<PointTy> &vector1, const Vector<PointTy> &vector2) {
+  if (!valid(vector1) || !valid(vector2))
+    return false;
+
+  return cmp(vector1.x, vector2.x) && cmp(vector1.y, vector2.y) &&
+         cmp(vector1.z, vector2.z);
+}
 
 template <typename PointTy = double>
 Vector<PointTy> vector_from_point(const Point<PointTy> &point) {
-  Vector<PointTy> vector{point.get_x(), point.get_y(), point.get_z()};
+  Vector<PointTy> vector{point.x, point.y, point.z};
   return vector;
 }
 
@@ -98,3 +60,4 @@ Vector<PointTy> cross(const Vector<PointTy> &vector1,
                          vector1.x * vector2.y - vector1.y * vector2.x);
   return vector;
 }
+} // namespace triangle

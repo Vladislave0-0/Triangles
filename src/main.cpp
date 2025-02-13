@@ -1,6 +1,7 @@
 #include "../include/octotree.hpp"
 
 int main() {
+  using namespace triangle;
   using PointTy = double;
 
   std::vector<Triangle<PointTy>> input;

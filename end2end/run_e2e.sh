@@ -22,6 +22,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
+            rm -f "$temp_result"
             exit 1
             ;;
     esac
@@ -39,12 +40,14 @@ if [ -z "$triag_bin" ]; then
         echo "ERROR: 'triag' binary not found. Options:"
         echo "1. Use -b to specify path"
         echo "2. Set TRIAG_BIN environment variable"
+        rm -f "$temp_result"
         exit 1
     fi
 fi
 
 if [ ! -f "$triag_bin" ]; then
     echo "ERROR: 'triag' binary not found at: $triag_bin"
+    rm -f "$temp_result"
     exit 1
 fi
 

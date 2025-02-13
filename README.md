@@ -11,12 +11,12 @@
 ## Компиляция
 ```
 cmake -S ./ -B build/ -DCMAKE_BUILD_TYPE=Release
-cmake --build build --target all
+cmake --build build/ --target all
 ```
 
 Тестирование проекта (интеграция google- и end2end-тестов):
 ```
-cmake --build build --target test
+cmake --build build/ --target test
 ```
 
 Запуск проекта:
@@ -37,7 +37,7 @@ cd build/
   - `lfu_cache.cpp`
   - `perfect_cache.cpp`
   - `google_test.cpp`
-- **include/**: содержит заголовочные файлы с реализацией основных классов и методов:
+- **include/**: содержит заголовочные файлы с реализацией основных классов и методов
   - `config.hpp`   
   - `interval.hpp` 
   - `line.hpp`
@@ -46,15 +46,15 @@ cd build/
   - `point.hpp`   
   - `triangles.hpp`
   - `vector.hpp`
-- **end2end/**: содержит конечные тесты и их результаты:
+- **end2end/**: содержит конечные тесты и их результаты
   - `run_e2e.sh`
   - `answers/`  
   - `tests/`
-- **geogebra_tests/**: содержит архивы для визуализации конкретного google-теста в geogebra-3D:
+- **geogebra_tests/**: содержит архивы для визуализации конкретного google-теста в geogebra-3D
   - `TrgWithTrg3D_1.ggb`
   - `TrgWithTrg3D_2.ggb`
   - `...`
   - `TrgWithLine3D_1.ggb`
   - `...`
-- **images/**: для мема:
+- **images/**: для мема
   - `debug.png`

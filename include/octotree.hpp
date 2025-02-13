@@ -1,11 +1,13 @@
 #pragma once
 
 #include <deque>
-#include <vector>
 #include <map>
 #include <math.h>
+#include <vector>
 
 #include "triangles.hpp"
+
+namespace triangle {
 
 template <typename PointTy = double> class BoundingBox {
   std::vector<Triangle<PointTy>> trg_in_cell;
@@ -102,10 +104,9 @@ public:
       PointTy average = calculate_average(front_groups, nod);
 
       for (const auto &it : front_groups.get_trg_in_cell()) {
-        PointTy coordinates[3][3] = {
-            it.get_a().get_x(), it.get_b().get_x(), it.get_c().get_x(),
-            it.get_a().get_y(), it.get_b().get_y(), it.get_c().get_y(),
-            it.get_a().get_z(), it.get_b().get_z(), it.get_c().get_z()};
+        PointTy coordinates[3][3] = {it.get_a().x, it.get_b().x, it.get_c().x,
+                                     it.get_a().y, it.get_b().y, it.get_c().y,
+                                     it.get_a().z, it.get_b().z, it.get_c().z};
 
         if (coordinates[nod][0] >= average || coordinates[nod][1] >= average ||
             coordinates[nod][2] >= average) {
@@ -118,7 +119,8 @@ public:
         }
       }
 
-      if (plus.size() + minus.size() < front_groups.get_trg_in_cell().size() * 2) {
+      if (plus.size() + minus.size() <
+          front_groups.get_trg_in_cell().size() * 2) {
         if (!plus.empty()) {
           cells.push_back(BoundingBox<PointTy>(plus));
           ++cells_num;
@@ -159,3 +161,4 @@ public:
     }
   }
 };
+} // namespace triangle

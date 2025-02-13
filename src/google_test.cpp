@@ -2,7 +2,8 @@
 
 #include "../include/triangles.hpp"
 
-bool double_cmp(double x, double y) { return fabs(x - y) < epsilon_; }
+namespace triangle {
+bool cmp(double x, double y) { return fabs(x - y) < epsilon_; }
 
 TEST(TriangleWithTriangle, Intersection2D_1) {
   Point t1p1{0.4, -5.0, 0.0};
@@ -763,64 +764,55 @@ TEST(PointWithPoint, Intersection_2) {
 //=================================================
 
 TEST(TestClassPoint, TestValid) {
-  Point p1(1.0, 2.0, 3.0);
-  Point<float> p2(NAN, 2.0, 3.0);
+  Point p1{1.0, 2.0, 3.0};
+  Point<float> p2{NAN, 2.0, 3.0};
 
-  EXPECT_EQ(p1.get_x(), 1.0);
-  EXPECT_EQ(p1.get_y(), 2.0);
-  EXPECT_EQ(p1.get_z(), 3.0);
-  EXPECT_EQ(p1.valid(), 1);
-  EXPECT_EQ(p2.valid(), 0);
+  EXPECT_EQ(p1.x, 1.0);
+  EXPECT_EQ(p1.y, 2.0);
+  EXPECT_EQ(p1.z, 3.0);
+  EXPECT_EQ(valid(p1), 1);
+  EXPECT_EQ(valid(p2), 0);
 }
 
 TEST(TestClassPoint, TestOperations) {
-  Point p1(1.0, 2.0, 3.0);
-  Point p2(-1.0, 0.0, 1.0);
-  Point p3 = p1;
+  Point p1{1.0, 2.0, 3.0};
+  Point p2{-1.0, 0.0, 1.0};
+  Point p3{p1};
 
-  EXPECT_EQ(p1 + p2, Point(0.0, 2.0, 4.0));
   EXPECT_EQ(point_from_vector(p1 - p2), Point(2.0, 2.0, 2.0));
-  EXPECT_EQ(is_equal(p1, p1), 1);
-  EXPECT_EQ(is_equal(p3, p1), 1);
-  EXPECT_EQ(is_equal(p1, p2), 0);
+  EXPECT_EQ(p1 - p2, Vector(2.0, 2.0, 2.0));
+  EXPECT_EQ(equal(p1, p1), 1);
+  EXPECT_EQ(equal(p3, p1), 1);
+  EXPECT_EQ(equal(p1, p2), 0);
 }
 
 TEST(TestClassVector, TestValid) {
-  Point p1(1.0, 2.0, 3.0);
-  Point p2(-1.0, 0.0, 1.0);
-  Vector v1(1.0, 2.0, 3.0);
-  Vector v2(p1, p2);
+  Point p1{1.0, 2.0, 3.0};
+  Point p2{-1.0, 0.0, 1.0};
+  Vector v1{1.0, 2.0, 3.0};
+  Vector v2{p1 - p2};
 
   EXPECT_EQ(v1.x, 1.0);
   EXPECT_EQ(v1.y, 2.0);
   EXPECT_EQ(v1.z, 3.0);
-  EXPECT_EQ(v1.valid(), 1);
-  EXPECT_EQ(v2.valid(), 1);
+  EXPECT_EQ(valid(v1), 1);
+  EXPECT_EQ(valid(v2), 1);
 }
 
 TEST(TestClassVector, TestOperations) {
-  Point p1(1.0, 2.0, 3.0);
-  Point p2(-1.0, 0.0, 1.0);
-  Vector v1(1.0, 2.0, 3.0);
-  Vector v2(-1.0, 0.0, 1.0);
+  Point p1{1.0, 2.0, 3.0};
+  Point p2{-1.0, 0.0, 1.0};
+  Vector v1{1.0, 2.0, 3.0};
+  Vector v2{-1.0, 0.0, 1.0};
   Vector v3 = v1;
-  Vector v4(p1, p2);
+  Vector v4{p1 - p2};
   Vector v5 = vector_from_point(p1);
-  double div_scalar = -1;
-  double mul_scalar = 52;
-
-  EXPECT_EQ(v1 + v2, Vector(0.0, 2.0, 4.0));
-  EXPECT_EQ(v1 - v2, Vector(2.0, 2.0, 2.0));
 
   EXPECT_EQ(v1 == v1, 1);
   EXPECT_EQ(v1 == v2, 0);
   EXPECT_EQ(v1 == v3, 1);
   EXPECT_EQ(v1 == v4, 0);
   EXPECT_EQ(v1 == v5, 1);
-
-  EXPECT_EQ(v2 / div_scalar, Vector(1.0, 0.0, -1.0));
-  EXPECT_EQ(v2 * mul_scalar, Vector(-52.0, 0.0, 52.0));
-  EXPECT_EQ(v2.length(), sqrt(2));
 
   EXPECT_EQ(dot(v1, v2), 2);
   EXPECT_EQ(cross(v1, v2), Vector(2.0, -4.0, 2.0));
@@ -830,19 +822,19 @@ TEST(TestClassVector, TestOperations) {
 }
 
 TEST(TestClassLine, TestValid) {
-  Point point(1.0, 2.0, 3.0);
-  Vector vector(4.0, 5.0, 6.0);
+  Point point{1.0, 2.0, 3.0};
+  Vector vector{4.0, 5.0, 6.0};
 
   Line line(vector, point);
   EXPECT_EQ(line.valid(), 1);
 }
 
 TEST(TestClassLine, TestOperations) {
-  Line line1(Vector(1.0, 0.0, 1.0), Point(0.0, 0.0, 0.0));
-  Line line2(Vector(1.0, 0.0, 1.0), Point(1.0, 0.0, 1.0));
-  Line line3(Vector(4.0, 0.0, 4.0), Point(-1.0, -1.0, -1.0));
-  Line line4(Vector(1.0, 2.0, 3.0), Point(4.0, 5.0, 6.0));
-  Line line5(Vector(2.0, 0.0, 2.0), Point(-1.0, 0.0, -1.0));
+  Line line1{Vector(1.0, 0.0, 1.0), Point(0.0, 0.0, 0.0)};
+  Line line2{Vector(1.0, 0.0, 1.0), Point(1.0, 0.0, 1.0)};
+  Line line3{Vector(4.0, 0.0, 4.0), Point(-1.0, -1.0, -1.0)};
+  Line line4{Vector(1.0, 2.0, 3.0), Point(4.0, 5.0, 6.0)};
+  Line line5{Vector(2.0, 0.0, 2.0), Point(-1.0, 0.0, -1.0)};
 
   EXPECT_EQ(line1 == line1, 1);
   EXPECT_EQ(line1 == line2, 1);
@@ -852,11 +844,11 @@ TEST(TestClassLine, TestOperations) {
 }
 
 TEST(TestClassPlane, TestOperations) {
-  Point point1(52.0, 52.0, 52.0);
-  Point point2(1.0, 0.0, 1.0);
+  Point point1{52.0, 52.0, 52.0};
+  Point point2{1.0, 0.0, 1.0};
 
-  Plane<double> plane1(0, 0, 0, 1, 0, 0, 0, 1, 0);
-  Plane<double> plane2(2, 0, -1, 2, 0, 1, 2, 1, 0);
+  Plane<double> plane1{0, 0, 0, 1, 0, 0, 0, 1, 0};
+  Plane<double> plane2{2, 0, -1, 2, 0, 1, 2, 1, 0};
 
   EXPECT_EQ(plane1.get_normal(), Vector(0.0, 0.0, 1.0));
   EXPECT_EQ(plane2.get_normal(), Vector(-2.0, 0.0, 0.0));
@@ -874,3 +866,4 @@ int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
+} // namespace triangle

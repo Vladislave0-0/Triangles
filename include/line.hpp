@@ -1,7 +1,8 @@
 #pragma once
 
-#include "point.hpp"
 #include "vector.hpp"
+
+namespace triangle {
 
 template <typename PointTy> class Triangle;
 
@@ -13,7 +14,9 @@ public:
   Line() = default;
   Line(Vector<PointTy> v, Point<PointTy> p) : vector(v), point(p) {}
 
-  bool valid() const { return vector.valid() && point.valid(); }
+  bool valid() const {
+    return triangle::valid(vector) && triangle::valid(point);
+  }
 
   void print() const {
     std::cout << "x = " << vector.x << "t + " << point.get_x() << std::endl;
@@ -22,10 +25,9 @@ public:
   }
 
   bool operator==(const Line<PointTy> &other) const {
-    Vector<PointTy> cross_res =
-        cross(point - other.point, other.vector);
-    if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
-        double_cmp(cross_res.z, 0.0)) {
+    Vector<PointTy> cross_res = cross(point - other.point, other.vector);
+    if (cmp(cross_res.x, 0.0) && cmp(cross_res.y, 0.0) &&
+        cmp(cross_res.z, 0.0)) {
       return true;
     }
 
@@ -35,9 +37,9 @@ public:
 
 template <typename PointTy = double>
 bool is_point_on_line(const Point<PointTy> &point, const Line<PointTy> &line) {
-  if (double_cmp(line.vector.x * point.get_x() + line.point.get_x(), 0.0) &&
-      double_cmp(line.vector.y * point.get_y() + line.point.get_y(), 0.0) &&
-      double_cmp(line.vector.z * point.get_z() + line.point.get_z(), 0.0)) {
+  if (cmp(line.vector.x * point.get_x() + line.point.get_x(), 0.0) &&
+      cmp(line.vector.y * point.get_y() + line.point.get_y(), 0.0) &&
+      cmp(line.vector.z * point.get_z() + line.point.get_z(), 0.0)) {
     return true;
   }
 
@@ -48,7 +50,7 @@ bool is_point_on_line(const Point<PointTy> &point, const Line<PointTy> &line) {
 template <typename PointTy = double>
 Point<PointTy> intersect_line_with_line(const Line<PointTy> &line1,
                                         const Line<PointTy> &line2) {
-  Point<PointTy> point{NAN, NAN, NAN};
+  Point<PointTy> point;
 
   PointTy A = dot(line1.vector, line1.vector);
   PointTy B = dot(line1.vector, line2.vector);
@@ -58,7 +60,7 @@ Point<PointTy> intersect_line_with_line(const Line<PointTy> &line1,
   PointTy F = dot(line1.point - line2.point, line1.point - line2.point);
 
   PointTy denom = A * C - B * B;
-  if (double_cmp(denom, 0.0)) { // Parallel lines
+  if (cmp(denom, 0.0)) { // Parallel lines
     return point;
   }
 
@@ -67,11 +69,13 @@ Point<PointTy> intersect_line_with_line(const Line<PointTy> &line1,
   PointTy t = (B * D - A * E) / denom;
 
   PointTy dist = s * (A * s + B * t + 2 * D) + t * (B * s + C * t + 2 * E) + F;
-  if (!double_cmp(dist, 0.0)) // Lines are not on one plane
+  if (!cmp(dist, 0.0)) // Lines are not on one plane
     return point;
 
   // Lines on one plane
-  point = point_from_vector(line2.vector) * (-t) + line2.point;
+  Point<PointTy> tmp_point = point_from_vector(line2.vector);
+  point = {line2.point.x - t * tmp_point.x, line2.point.y - t * tmp_point.y,
+           line2.point.z - t * tmp_point.z};
 
   return point;
 }
@@ -83,10 +87,10 @@ Line<PointTy> get_line_from_triangle(const Triangle<PointTy> t) {
   if (t.get_type() != Triangle<PointTy>::LINE)
     return line;
 
-  if (is_equal(t.get_a(), t.get_b())) {
+  if (equal(t.get_a(), t.get_b())) {
     line.vector = t.get_c() - t.get_a();
     line.point = t.get_a();
-  } else if (is_equal(t.get_a(), t.get_c())) {
+  } else if (equal(t.get_a(), t.get_c())) {
     line.vector = t.get_b() - t.get_a();
     line.point = t.get_a();
   } else {
@@ -103,12 +107,11 @@ bool intersect_line_with_point(const Triangle<PointTy> t1,
   Line<PointTy> line = get_line_from_triangle(t1);
   Point<PointTy> point = t2.get_a();
 
-  Vector<PointTy> cross_res =
-      cross(point - line.point, line.vector);
-  if (double_cmp(cross_res.x, 0.0) && double_cmp(cross_res.y, 0.0) &&
-      double_cmp(cross_res.z, 0.0)) {
+  Vector<PointTy> cross_res = cross(point - line.point, line.vector);
+  if (cmp(cross_res.x, 0.0) && cmp(cross_res.y, 0.0) && cmp(cross_res.z, 0.0)) {
     return true;
   }
 
   return false;
 }
+} // namespace triangle

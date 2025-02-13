@@ -1,10 +1,10 @@
 #pragma once
 
-#include <utility>
-
 #include "interval.hpp"
 #include "line.hpp"
 #include "plane.hpp"
+
+namespace triangle {
 
 template <typename PointTy = double> class Triangle {
 public:
@@ -17,13 +17,13 @@ private:
   Point<PointTy> a, b, c;
 
   void validate() {
-    if (!a.valid() || !b.valid() || !c.valid())
+    if (!valid(a) || !valid(b) || !valid(c))
       return;
 
-    if (is_equal(a, b) && is_equal(b, c)) {
+    if (equal(a, b) && equal(b, c)) {
       type = POINT;
       return;
-    } else if (is_equal(a, b) || is_equal(b, c) || is_equal(a, c) ||
+    } else if (equal(a, b) || equal(b, c) || equal(a, c) ||
                three_points_on_one_line(a, b, c)) {
       type = LINE;
       return;
@@ -83,31 +83,19 @@ public:
 
   Point<PointTy> get_c() const { return c; }
 
-  PointTy min_x() const {
-    return std::min(a.get_x(), std::min(b.get_x(), c.get_x()));
-  }
-
-  PointTy max_x() const {
-    return std::max(a.get_x(), std::max(b.get_x(), c.get_x()));
-  }
-
-  PointTy min_y() const {
-    return std::min(a.get_y(), std::min(b.get_y(), c.get_y()));
-  }
-
-  PointTy max_y() const {
-    return std::max(a.get_y(), std::max(b.get_y(), c.get_y()));
-  }
-
-  PointTy min_z() const {
-    return std::min(a.get_z(), std::min(b.get_z(), c.get_z()));
-  }
-
-  PointTy max_z() const {
-    return std::max(a.get_z(), std::max(b.get_z(), c.get_z()));
-  }
-
   TriangleType get_type() const { return type; }
+
+  PointTy min_x() const { return std::min(a.x, std::min(b.x, c.x)); }
+
+  PointTy max_x() const { return std::max(a.x, std::max(b.x, c.x)); }
+
+  PointTy min_y() const { return std::min(a.y, std::min(b.y, c.y)); }
+
+  PointTy max_y() const { return std::max(a.y, std::max(b.y, c.y)); }
+
+  PointTy min_z() const { return std::min(a.z, std::min(b.z, c.z)); }
+
+  PointTy max_z() const { return std::max(a.z, std::max(b.z, c.z)); }
 };
 
 template <typename PointTy = double>
@@ -144,7 +132,7 @@ bool check_intersection(Triangle<PointTy> &t1, Triangle<PointTy> &t2) {
   }
 
   if (type1 == TYPE::POINT && type2 == TYPE::POINT) {
-    return is_equal(t1.get_a(), t2.get_a());
+    return equal(t1.get_a(), t2.get_a());
   }
 
   return false;
@@ -200,7 +188,7 @@ bool intersect_triangle_with_triangle_in_3D(Triangle<PointTy> &t1,
   }
 
   // Let's check if the intervals intersect.
-  return intersect_inervals(interval1, interval2);
+  return intersect_intervals(interval1, interval2);
 }
 
 template <typename PointTy = double>
@@ -232,14 +220,13 @@ bool intersect_triangle_with_triangle_in_2D(Triangle<PointTy> &t1,
   Point<PointTy> b = t2.get_b();
   Point<PointTy> c = t2.get_c();
 
-  if (is_point_in_triangle(t1, a) || is_point_in_triangle(t1, b) ||
-      is_point_in_triangle(t1, c)) {
+  if (point_in_triangle(t1, a) || point_in_triangle(t1, b) ||
+      point_in_triangle(t1, c)) {
     return true;
   }
 
-  if (is_point_in_triangle(t2, t1.get_a()) ||
-      is_point_in_triangle(t2, t1.get_b()) ||
-      is_point_in_triangle(t2, t1.get_c())) {
+  if (point_in_triangle(t2, t1.get_a()) || point_in_triangle(t2, t1.get_b()) ||
+      point_in_triangle(t2, t1.get_c())) {
     return true;
   }
 
@@ -263,7 +250,7 @@ bool intersect_triangle_with_line_in_3D(const Triangle<PointTy> &t1,
   Vector<PointTy> p = cross(line.vector, e2);
   PointTy det = dot(p, e1);
 
-  if (double_cmp(det, 0.0)) {
+  if (cmp(det, 0.0)) {
     return intersect_triangle_with_segment_in_2D(
         t1, line, get_triangle_space(t2).first, get_triangle_space(t2).second);
   }
@@ -291,19 +278,17 @@ bool intersect_triangle_with_line_in_3D(const Triangle<PointTy> &t1,
 template <typename PointTy = double>
 bool intersect_triangle_with_point(const Triangle<PointTy> t1,
                                    const Triangle<PointTy> t2) {
-  return is_point_in_triangle(t1, t2.get_a());
+  return point_in_triangle(t1, t2.get_a());
 }
 
 template <typename PointTy = double>
-bool check_two_segments_intersection(const PointTy &min1, const PointTy &max1,
-                                     const PointTy &min2, const PointTy &max2) {
+bool check_segments_intersection(const PointTy &min1, const PointTy &max1,
+                                 const PointTy &min2, const PointTy &max2) {
   if (max1 < min2 || min1 > max2)
     return false;
 
-  if (double_cmp(min1, min2) && double_cmp(min1, max1) &&
-      double_cmp(min1, max2)) {
+  if (cmp(min1, min2) && cmp(min1, max1) && cmp(min1, max2))
     return false;
-  }
 
   return true;
 }
@@ -319,56 +304,48 @@ bool intersect_line_with_line(const Triangle<PointTy> t1,
   auto [min1, max1] = get_triangle_space(t1);
   auto [min2, max2] = get_triangle_space(t2);
 
-  if (!point.valid()) {
+  if (!valid(point)) {
     if (line1 == line2) {
-      if (check_two_segments_intersection(min1.get_x(), max1.get_x(),
-                                          min2.get_x(), max2.get_x()) ||
-          check_two_segments_intersection(min1.get_y(), max1.get_y(),
-                                          min2.get_y(), max2.get_y()) ||
-          check_two_segments_intersection(min1.get_z(), max1.get_z(),
-                                          min2.get_z(), max2.get_z())) {
+      if (check_segments_intersection(min1.x, max1.x, min2.x, max2.x) ||
+          check_segments_intersection(min1.y, max1.y, min2.y, max2.y) ||
+          check_segments_intersection(min1.z, max1.z, min2.z, max2.z)) {
         return true;
       }
     }
     return false;
   }
 
-  return check_if_inter_point_belongs_space(min1, max1, min2, max2, point);
+  return inter_point_inside_space(min1, max1, min2, max2, point);
 }
 
 template <typename PointTy = double>
-bool check_if_inter_point_belongs_sides(const Point<PointTy> &a1,
-                                        const Point<PointTy> &b1,
-                                        const Point<PointTy> &a2,
-                                        const Point<PointTy> &b2,
-                                        const Point<PointTy> &point) {
-  if (!point.valid())
+bool inter_point_on_sides(const Point<PointTy> &a1, const Point<PointTy> &b1,
+                          const Point<PointTy> &a2, const Point<PointTy> &b2,
+                          const Point<PointTy> &point) {
+  if (!valid(point))
     return false;
 
   auto [min1, max1] = get_segment_space(a1, b1);
   auto [min2, max2] = get_segment_space(a2, b2);
 
-  return check_if_inter_point_belongs_space(min1, max1, min2, max2, point);
+  return inter_point_inside_space(min1, max1, min2, max2, point);
 }
 
 template <typename PointTy = double>
-bool check_if_inter_point_belongs_space(const Point<PointTy> &min1,
-                                        const Point<PointTy> &max1,
-                                        const Point<PointTy> &min2,
-                                        const Point<PointTy> &max2,
-                                        const Point<PointTy> &point) {
+bool inter_point_inside_space(const Point<PointTy> &min1,
+                              const Point<PointTy> &max1,
+                              const Point<PointTy> &min2,
+                              const Point<PointTy> &max2,
+                              const Point<PointTy> &point) {
   auto is_within_bounds = [](const Point<PointTy> &min,
                              const Point<PointTy> &max,
                              const Point<PointTy> &pt) {
-    return (pt.get_x() >= min.get_x() && pt.get_x() <= max.get_x() ||
-            (double_cmp(pt.get_x(), min.get_x()) &&
-             double_cmp(pt.get_x(), max.get_x()))) &&
-           (pt.get_y() >= min.get_y() && pt.get_y() <= max.get_y() ||
-            (double_cmp(pt.get_y(), min.get_y()) &&
-             double_cmp(pt.get_y(), max.get_y()))) &&
-           (pt.get_z() >= min.get_z() && pt.get_z() <= max.get_z() ||
-            (double_cmp(pt.get_z(), min.get_z()) &&
-             double_cmp(pt.get_z(), max.get_z())));
+    return (pt.x >= min.x && pt.x <= max.x ||
+            (cmp(pt.x, min.x) && cmp(pt.x, max.x))) &&
+           (pt.y >= min.y && pt.y <= max.y ||
+            (cmp(pt.y, min.y) && cmp(pt.y, max.y))) &&
+           (pt.z >= min.z && pt.z <= max.z ||
+            (cmp(pt.z, min.z) && cmp(pt.z, max.z)));
   };
 
   return is_within_bounds(min1, max1, point) &&
@@ -382,24 +359,18 @@ bool intersect_triangle_with_segment_in_2D(const Triangle<PointTy> &t,
                                            const Point<PointTy> &seg_max) {
   Line<PointTy> line1{t.get_b() - t.get_a(), t.get_a()};
   Point<PointTy> point1 = intersect_line_with_line(line, line1);
-  if (check_if_inter_point_belongs_sides(t.get_a(), t.get_b(), seg_min, seg_max,
-                                         point1)) {
+  if (inter_point_on_sides(t.get_a(), t.get_b(), seg_min, seg_max, point1))
     return true;
-  }
 
   Line<PointTy> line2{t.get_c() - t.get_a(), t.get_a()};
   Point<PointTy> point2 = intersect_line_with_line(line, line2);
-  if (check_if_inter_point_belongs_sides(t.get_a(), t.get_c(), seg_min, seg_max,
-                                         point2)) {
+  if (inter_point_on_sides(t.get_a(), t.get_c(), seg_min, seg_max, point2))
     return true;
-  }
 
   Line<PointTy> line3{t.get_c() - t.get_b(), t.get_b()};
   Point<PointTy> point3 = intersect_line_with_line(line, line3);
-  if (check_if_inter_point_belongs_sides(t.get_b(), t.get_c(), seg_min, seg_max,
-                                         point3)) {
+  if (inter_point_on_sides(t.get_b(), t.get_c(), seg_min, seg_max, point3))
     return true;
-  }
 
   return false;
 }
@@ -407,37 +378,26 @@ bool intersect_triangle_with_segment_in_2D(const Triangle<PointTy> &t,
 template <typename PointTy = double>
 std::pair<Point<PointTy>, Point<PointTy>>
 get_triangle_space(const Triangle<PointTy> t) {
-  PointTy min_x = std::min(t.get_a().get_x(),
-                           std::min(t.get_b().get_x(), t.get_c().get_x()));
-  PointTy max_x = std::max(t.get_a().get_x(),
-                           std::max(t.get_b().get_x(), t.get_c().get_x()));
-  PointTy min_y = std::min(t.get_a().get_y(),
-                           std::min(t.get_b().get_y(), t.get_c().get_y()));
-  PointTy max_y = std::max(t.get_a().get_y(),
-                           std::max(t.get_b().get_y(), t.get_c().get_y()));
-  PointTy min_z = std::min(t.get_a().get_z(),
-                           std::min(t.get_b().get_z(), t.get_c().get_z()));
-  PointTy max_z = std::max(t.get_a().get_z(),
-                           std::max(t.get_b().get_z(), t.get_c().get_z()));
+  PointTy min_x = std::min(t.get_a().x, std::min(t.get_b().x, t.get_c().x));
+  PointTy max_x = std::max(t.get_a().x, std::max(t.get_b().x, t.get_c().x));
+  PointTy min_y = std::min(t.get_a().y, std::min(t.get_b().y, t.get_c().y));
+  PointTy max_y = std::max(t.get_a().y, std::max(t.get_b().y, t.get_c().y));
+  PointTy min_z = std::min(t.get_a().z, std::min(t.get_b().z, t.get_c().z));
+  PointTy max_z = std::max(t.get_a().z, std::max(t.get_b().z, t.get_c().z));
 
-  Point<PointTy> min_vector{min_x, min_y, min_z};
-  Point<PointTy> max_vector{max_x, max_y, max_z};
-
-  return std::make_pair(min_vector, max_vector);
+  return std::make_pair(Point(min_x, min_y, min_z), Point(max_x, max_y, max_z));
 }
 
 template <typename PointTy = double>
 std::pair<Point<PointTy>, Point<PointTy>>
 get_segment_space(const Point<PointTy> a, const Point<PointTy> b) {
-  PointTy min_x = std::min(a.get_x(), b.get_x());
-  PointTy max_x = std::max(a.get_x(), b.get_x());
-  PointTy min_y = std::min(a.get_y(), b.get_y());
-  PointTy max_y = std::max(a.get_y(), b.get_y());
-  PointTy min_z = std::min(a.get_z(), b.get_z());
-  PointTy max_z = std::max(a.get_z(), b.get_z());
+  PointTy min_x = std::min(a.x, b.x);
+  PointTy max_x = std::max(a.x, b.x);
+  PointTy min_y = std::min(a.y, b.y);
+  PointTy max_y = std::max(a.y, b.y);
+  PointTy min_z = std::min(a.z, b.z);
+  PointTy max_z = std::max(a.z, b.z);
 
-  Point<PointTy> min_vector{min_x, min_y, min_z};
-  Point<PointTy> max_vector{max_x, max_y, max_z};
-
-  return std::make_pair(min_vector, max_vector);
+  return std::make_pair(Point(min_x, min_y, min_z), Point(max_x, max_y, max_z));
 }
+} // namespace triangle
