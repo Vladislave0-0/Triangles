@@ -6,22 +6,18 @@ namespace triangle {
 
 template <typename PointTy> class Triangle;
 
-template <typename PointTy = double> class Line {
-public:
+template <typename PointTy = double> struct Line {
   Vector<PointTy> vector;
   Point<PointTy> point;
-
-  Line() = default;
-  Line(Vector<PointTy> v, Point<PointTy> p) : vector(v), point(p) {}
 
   bool valid() const {
     return triangle::valid(vector) && triangle::valid(point);
   }
 
   void print() const {
-    std::cout << "x = " << vector.x << "t + " << point.get_x() << std::endl;
-    std::cout << "y = " << vector.y << "t + " << point.get_y() << std::endl;
-    std::cout << "z = " << vector.z << "t + " << point.get_z() << std::endl;
+    std::cout << "x = " << vector.x << "t + " << point.x << std::endl;
+    std::cout << "y = " << vector.y << "t + " << point.y << std::endl;
+    std::cout << "z = " << vector.z << "t + " << point.z << std::endl;
   }
 
   bool operator==(const Line<PointTy> &other) const {
@@ -60,9 +56,8 @@ Point<PointTy> intersect_line_with_line(const Line<PointTy> &line1,
   PointTy F = dot(line1.point - line2.point, line1.point - line2.point);
 
   PointTy denom = A * C - B * B;
-  if (cmp(denom, 0.0)) { // Parallel lines
+  if (cmp(denom, 0.0)) // Parallel lines
     return point;
-  }
 
   // Nonparallel lines
   PointTy s = (B * E - C * D) / denom;
@@ -108,9 +103,8 @@ bool intersect_line_with_point(const Triangle<PointTy> t1,
   Point<PointTy> point = t2.get_a();
 
   Vector<PointTy> cross_res = cross(point - line.point, line.vector);
-  if (cmp(cross_res.x, 0.0) && cmp(cross_res.y, 0.0) && cmp(cross_res.z, 0.0)) {
+  if (cmp(cross_res.x, 0.0) && cmp(cross_res.y, 0.0) && cmp(cross_res.z, 0.0))
     return true;
-  }
 
   return false;
 }

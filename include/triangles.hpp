@@ -183,9 +183,9 @@ bool intersect_triangle_with_triangle_in_3D(Triangle<PointTy> &t1,
   // intersection of planes.
   Interval interval1 = get_interval_of_triangle_and_line(inter_line, t1);
   Interval interval2 = get_interval_of_triangle_and_line(inter_line, t2);
-  if (!interval1.valid() || !interval2.valid()) {
+
+  if (!interval1.valid() || !interval2.valid())
     return false;
-  }
 
   // Let's check if the intervals intersect.
   return intersect_intervals(interval1, interval2);
@@ -312,6 +312,7 @@ bool intersect_line_with_line(const Triangle<PointTy> t1,
         return true;
       }
     }
+    
     return false;
   }
 

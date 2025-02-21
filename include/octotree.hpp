@@ -1,11 +1,9 @@
 #pragma once
 
+#include "triangles.hpp"
 #include <deque>
 #include <map>
-#include <math.h>
 #include <vector>
-
-#include "triangles.hpp"
 
 namespace triangle {
 
@@ -61,33 +59,14 @@ template <typename PointTy = float> class Octotree {
 
   size_t depth = 0;
   size_t cells_num = 0;
-  size_t triag_num = 0;
   int axis = 0;
 
 public:
-  Octotree(const std::vector<Triangle<PointTy>> &triangles,
-           const size_t triag_num)
-      : input(triangles), triag_num(triag_num) {
+  Octotree(const std::vector<Triangle<PointTy>> &triangles, size_t max_depth)
+      : input(triangles), depth(max_depth) {
     cells.push_back(BoundingBox<PointTy>(input));
-    depth = count_depth(triag_num);
     ++cells_num;
   };
-
-  size_t count_depth(const size_t &triag_num) const {
-    if (triag_num < 1000) {
-      return 0;
-    }
-
-    if (triag_num < 10000) {
-      return 1;
-    }
-
-    if (triag_num < 100000) {
-      return 2;
-    }
-
-    return 3;
-  }
 
   const std::deque<BoundingBox<PointTy>> &get_cells() { return cells; }
 
@@ -156,7 +135,7 @@ public:
 
   void divide_tree() {
     for (int i = 0; i < depth; ++i) {
-      for (int i = 0; i < 3; ++i)
+      for (int j = 0; j < 3; ++j)
         divide_cell();
     }
   }

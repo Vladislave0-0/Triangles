@@ -20,7 +20,7 @@ int main() {
     input.push_back(triangle);
   }
 
-  Octotree<PointTy> octotree(input, triag_num);
+  Octotree<PointTy> octotree(input, calculate_octotree_depth(triag_num));
   octotree.divide_tree();
 
   std::map<size_t, size_t> result;

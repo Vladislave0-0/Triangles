@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include "point.hpp"
+#include <vector>
 
 namespace triangle {
 template <typename PointTy> class Triangle;

@@ -14,10 +14,8 @@ template <typename PointTy = double> struct Vector {
   void normalize() {
     PointTy normal_length = std::sqrt(x * x + y * y + z * z);
 
-    if (cmp(normal_length, 0.0)) {
-      std::cerr << "The degenerate vector" << std::endl;
+    if (cmp(normal_length, 0.0))
       return;
-    }
 
     x = x / normal_length;
     y = y / normal_length;

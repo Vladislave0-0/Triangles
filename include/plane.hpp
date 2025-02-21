@@ -12,10 +12,8 @@ template <typename PointTy = double> class Plane {
   void normalize_plane() {
     normal_length = std::sqrt(A * A + B * B + C * C);
 
-    if (cmp(normal_length, 0.0)) {
-      std::cerr << "The degenerate plane" << std::endl;
+    if (cmp(normal_length, 0.0))
       return;
-    }
 
     A = A / normal_length;
     B = B / normal_length;
