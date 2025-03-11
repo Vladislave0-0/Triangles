@@ -48,7 +48,7 @@ cd build/
 ./triag < path_to_test
 ```
 
-Запуск отдельно google-тестов end2end-тестов соответственно:
+Запуск отдельно google-тестов и end2end-тестов соответственно:
 ```
 cd build/
 ./google_test
