@@ -72,4 +72,4 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-// g++ camera1.cpp -o exec.x -lGLEW -lglfw -lGL -lGLU -lglut -lX11 -lpthread -lXrandr -lXi
+// g++ testing_camera_with_cubes.cpp -o exec.x -lGLEW -lglfw -lGL -lGLU -lglut -lX11 -lpthread -lXrandr -lXi

@@ -8,7 +8,6 @@
 using PointTy = double;
 using namespace triangle;
 
-// Настройки
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -78,7 +77,7 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 void drawGrid() {
   glColor3f(0.5f, 0.5f, 0.5f);
   glBegin(GL_LINES);
-  for (int i = -100; i <= 100; i++) {
+  for (int i = -100; i <= 100; ++i) {
     glVertex3f(i, 0.0f, -100.0f);
     glVertex3f(i, 0.0f, 100.0f);
     glVertex3f(-100.0f, 0.0f, i);
@@ -95,7 +94,6 @@ void drawTriangles(std::vector<Triangle<PointTy>> &input, size_t triag_num) {
     glVertex3f(input[i].get_a().x, input[i].get_a().y, input[i].get_a().z);
     glVertex3f(input[i].get_b().x, input[i].get_b().y, input[i].get_b().z);
     glVertex3f(input[i].get_c().x, input[i].get_c().y, input[i].get_c().z);
-
   }
 
   glEnd();
@@ -167,4 +165,5 @@ int main() {
   glfwTerminate();
 }
 
-// g++ testing_camera_with_triangles.cpp ../src/config.cpp -o exec.x -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -std=c++20
+// g++ testing_camera_with_triangles.cpp ../src/config.cpp -o exec.x -lGLEW
+// -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -std=c++20
