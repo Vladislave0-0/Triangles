@@ -71,3 +71,5 @@ int main(int argc, char** argv) {
     glutMainLoop();
     return 0;
 }
+
+// g++ camera1.cpp -o exec.x -lGLEW -lglfw -lGL -lGLU -lglut -lX11 -lpthread -lXrandr -lXi
