@@ -37,6 +37,7 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 bool pause = false;
+bool greed = false;
 
 void processInput(GLFWwindow *window) {
   static bool escPressedLastFrame = false;
@@ -123,6 +124,24 @@ void drawTriangles(std::vector<Triangle<PointTy>> &input, size_t triag_num) {
   glEnd();
 }
 
+void drawPauseMenu() {
+  ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH / 2 - 150, SCR_HEIGHT / 2 - 100));
+  ImGui::SetNextWindowSize(ImVec2(400, 300));
+  ImGui::Begin("Settings", nullptr,
+               ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+  // Выбор цвета + палитра
+  ImGui::ColorEdit3("Triangle Color", (float *)&triangleColor);
+
+  // Скорость для камеры
+  ImGui::SliderFloat("Camera Speed", &cameraSpeedBase, 1.0f, 20.0f);
+
+  // Показывать сетку
+  ImGui::Checkbox("Show Greed", &greed);
+
+  ImGui::End();
+}
+
 int main() {
   if (!glfwInit())
     return -1;
@@ -169,21 +188,8 @@ int main() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    if (pause) {
-      ImGui::SetNextWindowPos(
-          ImVec2(SCR_WIDTH / 2 - 150, SCR_HEIGHT / 2 - 100));
-      ImGui::SetNextWindowSize(ImVec2(400, 300));
-      ImGui::Begin("Settings", nullptr,
-                   ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-      // Выбор цвета + палитра
-      ImGui::ColorEdit3("Triangle Color", (float *)&triangleColor);
-
-      // Скорость для камеры
-      ImGui::SliderFloat("Camera Speed", &cameraSpeedBase, 1.0f, 20.0f);
-
-      ImGui::End();
-    }
+    if (pause)
+      drawPauseMenu();
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -198,7 +204,9 @@ int main() {
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(glm::value_ptr(view));
 
-    drawGrid();
+    if (greed)
+      drawGrid();
+
     drawTriangles(input, triag_num);
 
     ImGui::Render();
