@@ -41,6 +41,7 @@ bool grid = true;
 bool coordinates = true;
 
 float epsilonShift = 0.01;
+float fov = 70.0f;
 
 // Настройки освещения
 glm::vec3 lightDirection = glm::vec3(0.0f, 0.0f, 1.0f); // Направление света
@@ -253,9 +254,12 @@ void drawPauseMenu() {
   ImGui::ColorEdit3("Light Color", &lightColor.x);
   ImGui::SliderFloat("Light Intensity", &lightIntensity, 0.0f, 5.0f);
 
+  ImGui::Separator();
+  ImGui::Text("Camera Settings");
+  ImGui::SliderFloat("FOV", &fov, 30.0f, 120.0f, "%.1f degrees");
+
   ImGui::End();
 }
-
 
 void drawCameraInfo() {
   ImGui::SetNextWindowPos(ImVec2(10, 10));
@@ -316,7 +320,7 @@ int main() {
     input.emplace_back(x1, y1, z1, x2, y2, z2, x3, y3, z3);
     input.emplace_back(x1, y1, z1, x2, y2, z2, x3, y3, z3);
   }
-  
+
   triag_num *= 2;
 
   while (!glfwWindowShouldClose(window)) {
@@ -339,9 +343,8 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glm::mat4 projection =
-        glm::perspective(glm::radians(45.0f),
-                         (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(
+        glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 modelView = view * model;
