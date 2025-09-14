@@ -1,24 +1,55 @@
 cmake_minimum_required(VERSION 3.11)
-
 project("Triangles")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
 
-include_directories(include/)
-add_executable(triag src/main.cpp src/config.cpp)
-
+# Находим необходимые пакеты
+find_package(OpenGL REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(GLEW REQUIRED)
 find_package(GTest REQUIRED)
+
+# Настройка включения директорий
+include_directories(include/)
+include_directories(imgui)
+
+# Файлы ImGui
+set(IMGUI_SOURCES
+    imgui/imgui.cpp
+    imgui/imgui_demo.cpp
+    imgui/imgui_draw.cpp
+    imgui/imgui_tables.cpp
+    imgui/imgui_widgets.cpp
+    imgui/backends/imgui_impl_glfw.cpp
+    imgui/backends/imgui_impl_opengl3.cpp
+)
+
+# Основной исполняемый файл
+add_executable(triag
+    src/main.cpp
+    src/config.cpp
+    src/visualizer.cpp
+    ${IMGUI_SOURCES}
+)
+
+# Связывание библиотек
+target_link_libraries(triag PRIVATE 
+    OpenGL::GL 
+    GLEW::GLEW 
+    glfw
+    pthread
+    X11
+    Xrandr
+    Xi
+)
+
+# Тесты
 enable_testing()
 add_executable(google_test src/google_test.cpp)
+target_link_libraries(google_test PRIVATE GTest::gtest_main)
 
-target_link_libraries(google_test GTest::gtest_main)
-
-gtest_discover_tests(
-    google_test
-    TEST_PREFIX gtest_
-)
+gtest_discover_tests(google_test TEST_PREFIX gtest_)
 
 add_test(
     NAME end2end_tests
@@ -29,5 +60,5 @@ add_test(
 
 add_custom_target(run_all_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS google_test end2end
+    DEPENDS google_test
 )

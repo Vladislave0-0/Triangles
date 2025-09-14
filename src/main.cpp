@@ -1,6 +1,7 @@
 #include "../include/octotree.hpp"
+#include "../include/visualizer.hpp"
 
-int main() {
+int main(int argc, char **argv) {
   using namespace triangle;
   using PointTy = double;
 
@@ -23,15 +24,24 @@ int main() {
   Octotree<PointTy> octotree(input, calculate_octotree_depth(triag_num));
   octotree.divide_tree();
 
-  std::map<size_t, size_t> result;
+  std::map<size_t, size_t> intersections;
   std::deque<BoundingBox<PointTy>> octotree_cells = octotree.get_cells();
 
   for (auto it : octotree_cells) {
     std::vector<Triangle<PointTy>> cur_cell = it.get_trg_in_cell();
-    it.group_intersections(result);
+    it.group_intersections(intersections);
   }
 
-  for (auto it = result.begin(); it != result.end(); ++it) {
-    std::cout << it->second << std::endl;
+  bool use_visualization = false;
+  if (argc > 1) {
+    std::string arg = argv[1];
+    use_visualization = (arg == "--visualize" || arg == "-v");
+  }
+
+  if (use_visualization) {
+    run_visualizer(input, intersections);
+  } else {
+    for (auto it = intersections.begin(); it != intersections.end(); ++it)
+      std::cout << it->second << std::endl;
   }
 }
