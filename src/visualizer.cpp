@@ -12,8 +12,8 @@
 using namespace triangle;
 
 // Window size.
-const unsigned int SCR_WIDTH = 1400;
-const unsigned int SCR_HEIGHT = 1000;
+unsigned int screen_width = 0;
+unsigned int screen_height = 0;
 
 // Variables for different colors of triangles depending on whether they
 // intersect or not.
@@ -39,8 +39,8 @@ ImVec4 fps_color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
 // Control.
 float yaw = -90.0f;
 float pitch = 0.0f;
-float last_x = SCR_WIDTH / 2.0f;
-float last_y = SCR_HEIGHT / 2.0f;
+float last_x = screen_width / 2.0f;
+float last_y = screen_height / 2.0f;
 float epsilon_shift = 0.01;
 bool first_mouse = true;
 bool pause = false;
@@ -291,7 +291,8 @@ void drawTriangles(std::vector<Triangle<PointTy>> &input,
 
 void drawPauseMenu() {
   ImGui::SetNextWindowPos(
-      ImVec2((float)SCR_WIDTH / 2 - 150, (float)SCR_HEIGHT / 2 - 100));
+      ImVec2((float)screen_width / 2 - 200, (float)screen_height / 2 - 150),
+      ImGuiCond_Always);
   ImGui::SetNextWindowSize(ImVec2(400, 300));
   ImGui::Begin("Settings", nullptr,
                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
@@ -362,17 +363,20 @@ void drawCameraInfo() {
 }
 
 void drawFPS(float fps) {
-  ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - 110, 10), ImGuiCond_Always);
-  ImGui::SetNextWindowSize(ImVec2(100, 50), ImGuiCond_Always);
-
+  ImGui::SetNextWindowPos(ImVec2(screen_width - 120, 10), ImGuiCond_Always);
+  ImGui::SetNextWindowSize(ImVec2(50, 50), ImGuiCond_Always);
   ImGui::SetNextWindowBgAlpha(0.3f);
+
   ImGuiWindowFlags flags =
       ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
       ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings |
       ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 
-  if (ImGui::Begin("FPS", nullptr, flags))
-    ImGui::TextColored(fps_color, "FPS:\n%.1f", fps);
+  if (ImGui::Begin("FPS", nullptr, flags)) {
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "FPS");
+    ImGui::Separator();
+    ImGui::TextColored(fps_color, "%.1f", fps);
+  }
 
   ImGui::End();
 }
@@ -384,8 +388,14 @@ void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
     return;
   }
 
-  GLFWwindow *window =
-      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "3D Scene", nullptr, nullptr);
+  // Getting monitor resolution.
+  GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+  const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+  screen_width = mode->width;
+  screen_height = mode->height;
+
+  GLFWwindow *window = glfwCreateWindow(screen_width, screen_height, "3D Scene",
+                                        nullptr, nullptr);
   if (!window) {
     glfwTerminate();
     std::cerr << "Error: couldn't create a window.\n";
@@ -443,7 +453,7 @@ void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 projection = glm::perspective(
-        glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
+        glm::radians(fov), (float)screen_width / (float)screen_height, 0.1f,
         drawing_range);
     glm::mat4 view =
         glm::lookAt(camera_pos, camera_pos + camera_front, camera_up);
