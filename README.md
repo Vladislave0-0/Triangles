@@ -81,12 +81,7 @@ cd build/
 ## Требования к зависимостям
 Для корректной работы программы необходимо установить следующие библиотеки:
 ```bash
-sudo apt-get install libgl1-mesa-dev
-sudo apt-get install libglfw3 libglfw3-dev
-sudo apt-get install libglew-dev
-sudo apt-get install libgtest-dev
-sudo apt-get install libglm-dev
-sudo apt-get install libxi-dev
+libgl1-mesa-dev, libglfw3, libglfw3-dev, libglew-dev, libgtest-dev, libglm-dev, libxi-dev
 ```
 
 ## Компиляция

@@ -11,69 +11,73 @@
 
 using namespace triangle;
 
-// Настройки
+// Window size.
 const unsigned int SCR_WIDTH = 1400;
 const unsigned int SCR_HEIGHT = 1000;
 
-// Глобальные переменные для настроек
-glm::vec3 noIntersectionTriangleColor =
+// Variables for different colors of triangles depending on whether they
+// intersect or not.
+glm::vec3 no_intersection_color =
     glm::vec3(27.0f / 255.0f, 94.0f / 255.0f, 215.0f / 255.0f);
-glm::vec3 intersectionTriangleColor =
+glm::vec3 intersection_color =
     glm::vec3(215.0f / 255.0f, 27.0f / 255.0f, 27.0f / 255.0f);
-float cameraSpeedBase = 10.0f;
 
-// Камера
-glm::vec3 cameraPos = glm::vec3(0.0f, 3.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, -0.5f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+// Camera.
+glm::vec3 camera_pos = glm::vec3(0.0f, 3.0f, 3.0f);
+glm::vec3 camera_front = glm::vec3(0.0f, -0.5f, -1.0f);
+glm::vec3 camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
+float camera_speed_base = 10.0f;
 
-// Тайминг
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+// Timing.
+float delta_time = 0.0f;
+float last_frame = 0.0f;
 
-// Управление
+// Control.
 float yaw = -90.0f;
 float pitch = 0.0f;
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
+float last_x = SCR_WIDTH / 2.0f;
+float last_y = SCR_HEIGHT / 2.0f;
+float epsilon_shift = 0.01;
+bool first_mouse = true;
 bool pause = false;
+bool coordinates = true;
+
+// View.
+float fov = 70.0f;
+float drawing_range = 100.0f;
+
+// Grid.
 bool x_grid = false;
 bool y_grid = true;
 bool z_grid = false;
 bool full_grid = false;
-bool coordinates = true;
-
-float epsilonShift = 0.01;
-float fov = 70.0f;
-float drawing_range = 100.0f;
 float grid_range = 100.0f;
 float full_grid_step = 10.0f;
 float non_full_grid_step = 1.0f;
 
-// Настройки освещения
-glm::vec3 lightDirection = glm::vec3(0.0f, 0.0f, 1.0f); // Направление света
-glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f); // Цвет света
-float lightIntensity = 1.0f;
+// Light.
+glm::vec3 light_direction = glm::vec3(0.0f, 0.0f, 1.0f);
+glm::vec3 light_color = glm::vec3(1.0f, 1.0f, 1.0f);
+float light_intensity = 1.0f;
 
 void setupLighting() {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-  // Настройка двустороннего освещения
+  // Setting up two-way lighting.
   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 
-  GLfloat lightPos[4] = {lightDirection.x, lightDirection.y, lightDirection.z,
-                         0.0f};
-  GLfloat lightColorData[4] = {lightColor.x * lightIntensity,
-                               lightColor.y * lightIntensity,
-                               lightColor.z * lightIntensity, 1.0f};
+  GLfloat lightPos[4] = {light_direction.x, light_direction.y,
+                         light_direction.z, 0.0f};
+  GLfloat lightColorData[4] = {light_color.x * light_intensity,
+                               light_color.y * light_intensity,
+                               light_color.z * light_intensity, 1.0f};
 
   glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColorData);
   glLightfv(GL_LIGHT0, GL_SPECULAR, lightColorData);
 
-  // Настройки материала
+  // Material Settings.
   glEnable(GL_COLOR_MATERIAL);
   glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
@@ -88,7 +92,7 @@ void setupLighting() {
 
 void processInput(GLFWwindow *window) {
   static bool escPressedLastFrame = false;
-  float cameraSpeed = cameraSpeedBase * deltaTime;
+  float cameraSpeed = camera_speed_base * delta_time;
 
   if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
@@ -99,42 +103,42 @@ void processInput(GLFWwindow *window) {
     glfwSetInputMode(window, GLFW_CURSOR,
                      pause ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
     if (!pause)
-      firstMouse = true;
+      first_mouse = true;
   }
   escPressedLastFrame = currentEscState;
 
   if (!pause) {
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-      cameraPos += cameraSpeed * cameraFront;
+      camera_pos += cameraSpeed * camera_front;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-      cameraPos -= cameraSpeed * cameraFront;
+      camera_pos -= cameraSpeed * camera_front;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-      cameraPos -=
-          glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+      camera_pos -=
+          glm::normalize(glm::cross(camera_front, camera_up)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-      cameraPos +=
-          glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+      camera_pos +=
+          glm::normalize(glm::cross(camera_front, camera_up)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-      cameraPos += cameraSpeed * cameraUp;
+      camera_pos += cameraSpeed * camera_up;
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-      cameraPos -= cameraSpeed * cameraUp;
+      camera_pos -= cameraSpeed * camera_up;
   }
 }
 
-void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
   if (pause)
     return;
 
-  if (firstMouse) {
-    lastX = xpos;
-    lastY = ypos;
-    firstMouse = false;
+  if (first_mouse) {
+    last_x = xpos;
+    last_y = ypos;
+    first_mouse = false;
   }
 
-  float xoffset = xpos - lastX;
-  float yoffset = lastY - ypos;
-  lastX = xpos;
-  lastY = ypos;
+  float xoffset = xpos - last_x;
+  float yoffset = last_y - ypos;
+  last_x = xpos;
+  last_y = ypos;
 
   float sensitivity = 0.4f;
   xoffset *= sensitivity;
@@ -149,7 +153,7 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
   front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
   front.y = sin(glm::radians(pitch));
   front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-  cameraFront = glm::normalize(front);
+  camera_front = glm::normalize(front);
 }
 
 void drawGrid() {
@@ -160,6 +164,7 @@ void drawGrid() {
   int full_grid_step_int = static_cast<int>(full_grid_step);
   int non_full_grid_step_int = static_cast<int>(non_full_grid_step);
 
+  // Drawing a spatial grid.
   if (full_grid) {
     for (int j = -grid_range_int; j <= grid_range_int;
          j += full_grid_step_int) {
@@ -190,6 +195,7 @@ void drawGrid() {
     return;
   }
 
+  // Drawing a grid in the x = 0, y = 0, z = 0 planes separately.
   if (x_grid) {
     for (int i = -grid_range_int; i <= grid_range_int;
          i += non_full_grid_step_int) {
@@ -227,34 +233,39 @@ void drawTriangles(std::vector<Triangle<PointTy>> &input,
                    std::map<size_t, size_t> &intersections, size_t triag_num) {
   glBegin(GL_TRIANGLES);
 
+  // Change the color depending on whether the triangles intersect or not.
   for (size_t i = 0; i < triag_num; ++i) {
     if (intersections.find(i / 2) != intersections.end()) {
-      glColor3f(intersectionTriangleColor.r, intersectionTriangleColor.g,
-                intersectionTriangleColor.b);
+      glColor3f(intersection_color.r, intersection_color.g,
+                intersection_color.b);
     } else {
-      glColor3f(noIntersectionTriangleColor.r, noIntersectionTriangleColor.g,
-                noIntersectionTriangleColor.b);
+      glColor3f(no_intersection_color.r, no_intersection_color.g,
+                no_intersection_color.b);
     }
 
     auto a = input[i].get_a();
     auto b = input[i].get_b();
     auto c = input[i].get_c();
 
-    // Вычисление нормали
+    // Calculating the normal.
     glm::vec3 v1 = glm::vec3(b.x - a.x, b.y - a.y, b.z - a.z);
     glm::vec3 v2 = glm::vec3(c.x - a.x, c.y - a.y, c.z - a.z);
     glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
-    if (i % 2) {
+    // For each even triangle, the normal changes its direction because the
+    // circumambulation of the triangle changes (each even triangle is an exact
+    // copy of the odd triangle).
+    if (i % 2)
       normal = -normal;
-    }
 
-    glm::vec3 lightDir = glm::normalize(lightDirection);
+    glm::vec3 lightDir = glm::normalize(light_direction);
     float dotProduct = glm::dot(normal, lightDir);
 
-    // Смещение вершин если нормаль направлена к свету
+    // We shift all the normals that are opposite to the light source (that is,
+    // these are the normal triangles that should be illuminated) by a small
+    // amount so that there is no flickering effect when working with OpenGL.
     if (dotProduct >= 0) {
-      glm::vec3 offset = epsilonShift * lightDir;
+      glm::vec3 offset = epsilon_shift * lightDir;
       a.x += offset.x;
       a.y += offset.y;
       a.z += offset.z;
@@ -283,14 +294,14 @@ void drawPauseMenu() {
 
   if (ImGui::BeginTabBar("Settings")) {
     if (ImGui::BeginTabItem("Rendering")) {
-      ImGui::ColorEdit3("Intersecting", (float *)&noIntersectionTriangleColor);
-      ImGui::ColorEdit3("Common", (float *)&intersectionTriangleColor);
+      ImGui::ColorEdit3("Intersecting", (float *)&no_intersection_color);
+      ImGui::ColorEdit3("Common", (float *)&intersection_color);
       ImGui::SliderFloat("Drawing Range", &drawing_range, 10.0f, 1000.0f);
       ImGui::EndTabItem();
     }
 
     if (ImGui::BeginTabItem("Camera")) {
-      ImGui::SliderFloat("Camera Speed", &cameraSpeedBase, 1.0f, 20.0f);
+      ImGui::SliderFloat("Camera Speed", &camera_speed_base, 1.0f, 20.0f);
       ImGui::SliderFloat("FOV", &fov, 30.0f, 120.0f, "%.1f degrees");
       ImGui::Checkbox("Show Camera's Position", &coordinates);
       ImGui::EndTabItem();
@@ -309,9 +320,9 @@ void drawPauseMenu() {
     }
 
     if (ImGui::BeginTabItem("Light")) {
-      ImGui::SliderFloat3("Light Direction", &lightDirection.x, -1.0f, 1.0f);
-      ImGui::ColorEdit3("Light Color", &lightColor.x);
-      ImGui::SliderFloat("Light Intensity", &lightIntensity, 0.0f, 5.0f);
+      ImGui::SliderFloat3("Light Direction", &light_direction.x, -1.0f, 1.0f);
+      ImGui::ColorEdit3("Light Color", &light_color.x);
+      ImGui::SliderFloat("Light Intensity", &light_intensity, 0.0f, 5.0f);
       ImGui::EndTabItem();
     }
   }
@@ -332,9 +343,9 @@ void drawCameraInfo() {
   if (ImGui::Begin("Camera Coordinates", nullptr, flags)) {
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Camera Position");
     ImGui::Separator();
-    ImGui::Text("X: %.2f", cameraPos.x);
-    ImGui::Text("Y: %.2f", cameraPos.y);
-    ImGui::Text("Z: %.2f", cameraPos.z);
+    ImGui::Text("X: %.2f", camera_pos.x);
+    ImGui::Text("Y: %.2f", camera_pos.y);
+    ImGui::Text("Z: %.2f", camera_pos.z);
   }
 
   ImGui::End();
@@ -343,7 +354,7 @@ void drawCameraInfo() {
 void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
                     std::map<size_t, size_t> &intersections) {
   if (!glfwInit()) {
-    std::cerr << "Ошибка: GLFW не инициализировался\n";
+    std::cerr << "Error: GLFW was not initialized.\n";
     return;
   }
 
@@ -351,19 +362,19 @@ void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
       glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "3D Scene", nullptr, nullptr);
   if (!window) {
     glfwTerminate();
-    std::cerr << "Ошибка: не удалось создать окно\n";
+    std::cerr << "Error: couldn't create a window.\n";
     return;
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetCursorPosCallback(window, mouse_callback);
+  glfwSetCursorPosCallback(window, mouseCallback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_NORMALIZE);
   glEnable(GL_LIGHTING);
   glDisable(GL_CULL_FACE);
 
-  // ImGui
+  // ImGui settings.
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO &io = ImGui::GetIO();
@@ -371,6 +382,8 @@ void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 130");
 
+  // To create the appearance of the dark and light sides, two polygons are
+  // specially created for each triangle.
   size_t triag_num = input.size() * 2;
   std::vector<triangle::Triangle<PointTy>> new_input;
 
@@ -381,8 +394,8 @@ void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
 
   while (!glfwWindowShouldClose(window)) {
     float currentFrame = glfwGetTime();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+    delta_time = currentFrame - last_frame;
+    last_frame = currentFrame;
 
     processInput(window);
 
@@ -402,7 +415,8 @@ void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
     glm::mat4 projection = glm::perspective(
         glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
         drawing_range);
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    glm::mat4 view =
+        glm::lookAt(camera_pos, camera_pos + camera_front, camera_up);
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 modelView = view * model;
 
