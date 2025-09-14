@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
   }
 
   if (use_visualization) {
-    run_visualizer(input, intersections);
+    runVisualizer(input, intersections);
   } else {
     for (auto it = intersections.begin(); it != intersections.end(); ++it)
       std::cout << it->second << std::endl;

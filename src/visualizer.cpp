@@ -32,6 +32,10 @@ float camera_speed_base = 10.0f;
 float delta_time = 0.0f;
 float last_frame = 0.0f;
 
+// FPS.
+bool show_FPS = true;
+ImVec4 fps_color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+
 // Control.
 float yaw = -90.0f;
 float pitch = 0.0f;
@@ -325,6 +329,12 @@ void drawPauseMenu() {
       ImGui::SliderFloat("Light Intensity", &light_intensity, 0.0f, 5.0f);
       ImGui::EndTabItem();
     }
+
+    if (ImGui::BeginTabItem("FPS Settings")) {
+      ImGui::Checkbox("Show FPS", &show_FPS);
+      ImGui::ColorEdit3("FPS Color", (float *)&fps_color);
+      ImGui::EndTabItem();
+    }
   }
 
   ImGui::EndTabBar();
@@ -351,8 +361,24 @@ void drawCameraInfo() {
   ImGui::End();
 }
 
-void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
-                    std::map<size_t, size_t> &intersections) {
+void drawFPS(float fps) {
+  ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - 110, 10), ImGuiCond_Always);
+  ImGui::SetNextWindowSize(ImVec2(100, 50), ImGuiCond_Always);
+
+  ImGui::SetNextWindowBgAlpha(0.3f);
+  ImGuiWindowFlags flags =
+      ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings |
+      ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+  if (ImGui::Begin("FPS", nullptr, flags))
+    ImGui::TextColored(fps_color, "FPS:\n%.1f", fps);
+
+  ImGui::End();
+}
+
+void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
+                   std::map<size_t, size_t> &intersections) {
   if (!glfwInit()) {
     std::cerr << "Error: GLFW was not initialized.\n";
     return;
@@ -396,6 +422,7 @@ void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
     float currentFrame = glfwGetTime();
     delta_time = currentFrame - last_frame;
     last_frame = currentFrame;
+    float fps = 1.0f / delta_time;
 
     processInput(window);
 
@@ -408,6 +435,9 @@ void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
 
     if (coordinates)
       drawCameraInfo();
+
+    if (show_FPS)
+      drawFPS(fps);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

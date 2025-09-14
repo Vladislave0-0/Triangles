@@ -5,5 +5,5 @@
 
 using PointTy = double;
 
-void run_visualizer(std::vector<triangle::Triangle<PointTy>> &input,
+void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
                     std::map<size_t, size_t> &intersections);
