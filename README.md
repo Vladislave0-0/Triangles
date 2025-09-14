@@ -6,8 +6,6 @@
 
 - [Level 2: Visualization in OpenGL](#hw3d-level-2-visualization-in-opengl)
 
-- [Level k: in process ^_^](#)
-
 <br><br>
 ***
 # HW3D. Level 1: Intersection of triangles in $R^3$
@@ -40,25 +38,25 @@ CMake с версией не меньше 3.11
 ```
 
 ## Компиляция
-```
+```bash
 cmake -S ./ -B build/ -DCMAKE_BUILD_TYPE=Release
 cmake --build build/
 ```
 
 Тестирование проекта (интеграция google- и end2end-тестов):
-```
+```bash
 cd build/
 ctest --output-on-failure
 ```
 
 Запуск проекта:
-```
+```bash
 cd build/
 ./triag < path_to_test
 ```
 
 Запуск отдельно google-тестов и end2end-тестов соответственно:
-```
+```bash
 cd build/
 ./google_test
 ../end2end/run_e2e.sh
@@ -66,7 +64,9 @@ cd build/
 
 <br><br><br>
 ***
+
 # HW3D. Level 2: Visualization in OpenGL
+
 ## Описание
 Второй  уровень проекта реализует визуализацию плоских треугольников в $R^3$ с помощью OpenGL. 
 
@@ -77,4 +77,66 @@ cd build/
 - Должно быть освещение;
 - Должна быть возможность управлять камерой, облетая сцену вокруг, приближая и отдаляя камеру (мышкой или клавиатурой).
 ***
+
+## Требования к зависимостям
+Для корректной работы программы необходимо установить следующие библиотеки:
+```bash
+sudo apt-get install libgl1-mesa-dev
+sudo apt-get install libglfw3 libglfw3-dev
+sudo apt-get install libglew-dev
+sudo apt-get install libgtest-dev
+sudo apt-get install libglm-dev
+sudo apt-get install libxi-dev
+```
+
+## Компиляция
+```bash
+cmake -S ./ -B build/ -DCMAKE_BUILD_TYPE=Release
+cmake --build build/
+```
+
+## Тестирование
+```bash
+cd build/
+# Все тесты
+ctest --output-on-failure
+
+# Только google-тесты
+./google_test
+
+# Только end2end-тесты
+../end2end/run_e2e.sh
+```
+
+## Использование флага --help или -h
+```bash
+Usage: triag [OPTIONS] < input_file
+
+Options:
+  -v, --visualize   # Enable visualization mode
+  -h, --help        # Show this help message
+  --version         # Show version information
+
+Examples:
+  triag < input.txt          # Calculation mode (default)
+  triag -v < input.txt       # Visualization mode 
+```
+
+
+## Управление
+    W/S: Движение вперед/назад
+    A/D: Движение влево/вправо
+    Space/Shift: Движение вверх/вниз
+    Мышь: Поворот камеры
+    ESC: Пауза/меню настроек
+    Q: Выход
+
+## Меню настроек (ESC)
+    Цвета треугольников (пересекающиеся/обычные)
+    Скорость камеры и поле зрения
+    Отображение координатной сетки
+    Параметры освещения
+
+---
+<br><br>
 ![alt text](./images/debug.png)

@@ -1,7 +1,37 @@
 #include "../include/octotree.hpp"
 #include "../include/visualizer.hpp"
 
+void print_help() {
+    std::cout << "Usage: triag [OPTIONS] < input_file\n\n"
+              << "Options:\n"
+              << "  -v, --visualize   # Enable visualization mode\n"
+              << "  -h, --help        # Show this help message\n"
+              << "  --version         # Show version information\n\n"
+              << "Examples:\n"
+              << "  triag < input.txt          # Calculation mode (default)\n"
+              << "  triag -v < input.txt       # Visualization mode with OpenGL\n";
+}
+
 int main(int argc, char **argv) {
+  bool use_visualization = false;
+
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg == "-h" || arg == "--help") {
+      print_help();
+      return 0;
+    } else if (arg == "-v" || arg == "--visualize") {
+      use_visualization = true;
+    } else if (arg == "--version") {
+      std::cout << "Triangles Intersection v2.0\n";
+      return 0;
+    } else {
+      std::cerr << "Unknown option: " << arg << "\n";
+      print_help();
+      return 1;
+    }
+  }
+
   using namespace triangle;
   using PointTy = double;
 
@@ -32,7 +62,6 @@ int main(int argc, char **argv) {
     it.group_intersections(intersections);
   }
 
-  bool use_visualization = false;
   if (argc > 1) {
     std::string arg = argv[1];
     use_visualization = (arg == "--visualize" || arg == "-v");
