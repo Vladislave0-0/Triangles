@@ -384,7 +384,7 @@ void drawFPS(float fps) {
 void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
                    std::map<size_t, size_t> &intersections) {
   if (!glfwInit()) {
-    std::cerr << "Error: GLFW was not initialized.\n";
+    std::cerr << "Error: GLFW was not initialized.";
     return;
   }
 
@@ -398,7 +398,7 @@ void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
                                         nullptr, nullptr);
   if (!window) {
     glfwTerminate();
-    std::cerr << "Error: couldn't create a window.\n";
+    std::cerr << "Error: couldn't create a window.";
     return;
   }
 
