@@ -140,5 +140,5 @@ Examples:
 ![alt text](images/level-2_menu.jpg)
 
 ---
-<br><br>
-![alt text](./images/debug.png)
+<!-- <br><br>
+![alt text](./images/debug.png) -->
