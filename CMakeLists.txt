@@ -4,17 +4,16 @@ project("Triangles")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Находим необходимые пакеты
+# Required packages
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GTest REQUIRED)
 
-# Настройка включения директорий
 include_directories(include/)
-include_directories(imgui)
+include_directories(imgui/)
 
-# Файлы ImGui
+# ImGui files
 set(IMGUI_SOURCES
     imgui/imgui.cpp
     imgui/imgui_demo.cpp
@@ -25,7 +24,6 @@ set(IMGUI_SOURCES
     imgui/backends/imgui_impl_opengl3.cpp
 )
 
-# Основной исполняемый файл
 add_executable(triag
     src/main.cpp
     src/config.cpp
@@ -33,7 +31,7 @@ add_executable(triag
     ${IMGUI_SOURCES}
 )
 
-# Связывание библиотек
+# Linking libraries
 target_link_libraries(triag PRIVATE 
     OpenGL::GL 
     GLEW::GLEW 
@@ -44,7 +42,7 @@ target_link_libraries(triag PRIVATE
     Xi
 )
 
-# Тесты
+# Testing
 enable_testing()
 add_executable(google_test src/google_test.cpp)
 target_link_libraries(google_test PRIVATE GTest::gtest_main)

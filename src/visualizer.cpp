@@ -23,10 +23,12 @@ glm::vec3 intersection_color =
     glm::vec3(215.0f / 255.0f, 27.0f / 255.0f, 27.0f / 255.0f);
 
 // Camera.
+float yaw = -90.0f;
+float pitch = 0.0f;
 glm::vec3 camera_pos = glm::vec3(0.0f, 3.0f, 3.0f);
 glm::vec3 camera_front = glm::vec3(0.0f, -0.5f, -1.0f);
 glm::vec3 camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
-float camera_speed_base = 10.0f;
+float camera_speed_base = 20.0f;
 
 // Timing.
 float delta_time = 0.0f;
@@ -37,8 +39,6 @@ bool show_FPS = true;
 ImVec4 fps_color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
 
 // Control.
-float yaw = -90.0f;
-float pitch = 0.0f;
 float last_x = screen_width / 2.0f;
 float last_y = screen_height / 2.0f;
 float epsilon_shift = 0.01;
@@ -63,6 +63,11 @@ float non_full_grid_step = 1.0f;
 glm::vec3 light_direction = glm::vec3(0.0f, 0.0f, 1.0f);
 glm::vec3 light_color = glm::vec3(1.0f, 1.0f, 1.0f);
 float light_intensity = 1.0f;
+
+// Flag
+bool show_flag = false;
+float flag_distance = 5.0f;
+float flag_size = 2.0f;
 
 void setupLighting() {
   glEnable(GL_LIGHTING);
@@ -126,6 +131,14 @@ void processInput(GLFWwindow *window) {
       camera_pos += cameraSpeed * camera_up;
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
       camera_pos -= cameraSpeed * camera_up;
+  }
+
+  static bool flagToggle = false;
+  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !flagToggle) {
+    show_flag = !show_flag;
+    flagToggle = true;
+  } else if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_RELEASE) {
+    flagToggle = false;
   }
 }
 
@@ -306,7 +319,7 @@ void drawPauseMenu() {
     }
 
     if (ImGui::BeginTabItem("Camera")) {
-      ImGui::SliderFloat("Camera Speed", &camera_speed_base, 1.0f, 20.0f);
+      ImGui::SliderFloat("Camera Speed", &camera_speed_base, 1.0f, 50.0f);
       ImGui::SliderFloat("FOV", &fov, 30.0f, 120.0f, "%.1f degrees");
       ImGui::Checkbox("Show Camera's Position", &coordinates);
       ImGui::EndTabItem();
@@ -379,6 +392,51 @@ void drawFPS(float fps) {
   }
 
   ImGui::End();
+}
+
+void drawFlag() {
+  float flagWidth = 3.0f;
+  float flagHeight = 2.0f;
+  float stripeHeight = flagHeight / 3.0f;
+
+  glPushMatrix();
+  glm::vec3 position = camera_pos + camera_front * flag_distance;
+  glTranslatef(position.x, position.y, position.z);
+  glRotatef(yaw, 0.0f, 1.0f, 0.0f);
+  glRotatef(-pitch, 1.0f, 0.0f, 0.0f);
+
+  float cur_flag_width = flagWidth / 2.0f;
+  float cur_flag_height = flagHeight / 2.0f;
+
+  // The white stripe.
+  glColor3f(1.0f, 1.0f, 1.0f);
+  glBegin(GL_QUADS);
+  glVertex3f(-cur_flag_width, cur_flag_height, 0.0f);
+  glVertex3f(cur_flag_width, cur_flag_height, 0.0f);
+  glVertex3f(cur_flag_width, cur_flag_height - stripeHeight, 0.0f);
+  glVertex3f(-cur_flag_width, cur_flag_height - stripeHeight, 0.0f);
+  glEnd();
+
+  // The blue stripe.
+  glColor3f(0.0f, 0.0f, 1.0f);
+  glBegin(GL_QUADS);
+  glVertex3f(-cur_flag_width, cur_flag_height - stripeHeight, 0.0f);
+  glVertex3f(cur_flag_width, cur_flag_height - stripeHeight, 0.0f);
+  glVertex3f(cur_flag_width, cur_flag_height - 2 * stripeHeight, 0.0f);
+  glVertex3f(-cur_flag_width, cur_flag_height - 2 * stripeHeight, 0.0f);
+  glEnd();
+
+  // The red stripe.
+  glColor3f(1.0f, 0.0f, 0.0f);
+  glBegin(GL_QUADS);
+  glVertex3f(-cur_flag_width, cur_flag_height - 2 * stripeHeight, 0.0f);
+  glVertex3f(cur_flag_width, cur_flag_height - 2 * stripeHeight, 0.0f);
+  glVertex3f(cur_flag_width, -cur_flag_height, 0.0f);
+  glVertex3f(-cur_flag_width, -cur_flag_height, 0.0f);
+  glEnd();
+
+  glPopMatrix();
+  glEnable(GL_LIGHTING);
 }
 
 void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
@@ -470,6 +528,9 @@ void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
 
     setupLighting();
     drawTriangles(new_input, intersections, triag_num);
+
+    if (show_flag)
+      drawFlag();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
