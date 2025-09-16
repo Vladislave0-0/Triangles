@@ -69,7 +69,7 @@ bool show_flag = false;
 float flag_distance = 5.0f;
 float flag_size = 2.0f;
 
-void setupLighting() {
+static void setupLighting() {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
@@ -99,7 +99,7 @@ void setupLighting() {
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 }
 
-void processInput(GLFWwindow *window) {
+static void processInput(GLFWwindow *window) {
   static bool escPressedLastFrame = false;
   float cameraSpeed = camera_speed_base * delta_time;
 
@@ -134,15 +134,15 @@ void processInput(GLFWwindow *window) {
   }
 
   static bool flagToggle = false;
-  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !flagToggle) {
+  if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && !flagToggle) {
     show_flag = !show_flag;
     flagToggle = true;
-  } else if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_RELEASE) {
+  } else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
     flagToggle = false;
   }
 }
 
-void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
+static void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
   if (pause)
     return;
 
@@ -173,7 +173,7 @@ void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
   camera_front = glm::normalize(front);
 }
 
-void drawGrid() {
+static void drawGrid() {
   glColor3f(0.5f, 0.5f, 0.5f);
   glBegin(GL_LINES);
 
@@ -246,7 +246,7 @@ void drawGrid() {
   glEnd();
 }
 
-void drawTriangles(std::vector<Triangle<PointTy>> &input,
+static void drawTriangles(std::vector<Triangle<PointTy>> &input,
                    std::map<size_t, size_t> &intersections, size_t triag_num) {
   glBegin(GL_TRIANGLES);
 
@@ -302,7 +302,7 @@ void drawTriangles(std::vector<Triangle<PointTy>> &input,
   glEnd();
 }
 
-void drawPauseMenu() {
+static void drawPauseMenu() {
   ImGui::SetNextWindowPos(
       ImVec2((float)screen_width / 2 - 200, (float)screen_height / 2 - 150),
       ImGuiCond_Always);
@@ -355,7 +355,7 @@ void drawPauseMenu() {
   ImGui::End();
 }
 
-void drawCameraInfo() {
+static void drawCameraInfo() {
   ImGui::SetNextWindowPos(ImVec2(10, 10));
   ImGui::SetNextWindowBgAlpha(0.3f);
 
@@ -375,7 +375,7 @@ void drawCameraInfo() {
   ImGui::End();
 }
 
-void drawFPS(float fps) {
+static void drawFPS(float fps) {
   ImGui::SetNextWindowPos(ImVec2(screen_width - 120, 10), ImGuiCond_Always);
   ImGui::SetNextWindowSize(ImVec2(50, 50), ImGuiCond_Always);
   ImGui::SetNextWindowBgAlpha(0.3f);
@@ -394,7 +394,7 @@ void drawFPS(float fps) {
   ImGui::End();
 }
 
-void drawFlag() {
+static void drawFlag() {
   float flagWidth = 3.0f;
   float flagHeight = 2.0f;
   float stripeHeight = flagHeight / 3.0f;
