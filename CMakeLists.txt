@@ -4,6 +4,13 @@ project("Triangles")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Option for sanitizer
+option(USE_SANITIZER "Enable address sanitizer" OFF)
+if(USE_SANITIZER)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+endif()
+
 # Required packages
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)

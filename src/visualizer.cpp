@@ -247,7 +247,8 @@ static void drawGrid() {
 }
 
 static void drawTriangles(std::vector<Triangle<PointTy>> &input,
-                   std::map<size_t, size_t> &intersections, size_t triag_num) {
+                          std::map<size_t, size_t> &intersections,
+                          size_t triag_num) {
   glBegin(GL_TRIANGLES);
 
   // Change the color depending on whether the triangles intersect or not.
@@ -478,13 +479,16 @@ void runVisualizer(std::vector<triangle::Triangle<PointTy>> &input,
 
   // To create the appearance of the dark and light sides, two polygons are
   // specially created for each triangle.
-  size_t triag_num = input.size() * 2;
+  size_t input_size = input.size();
   std::vector<triangle::Triangle<PointTy>> new_input;
+  new_input.reserve(input_size * 2);
 
-  for (size_t i = 0; i < triag_num; ++i) {
-    new_input.emplace_back(input[i]);
-    new_input.emplace_back(input[i]);
+  for (size_t i = 0; i < input_size; ++i) {
+    new_input.push_back(input[i]);
+    new_input.push_back(input[i]);
   }
+
+  size_t triag_num = new_input.size();
 
   while (!glfwWindowShouldClose(window)) {
     float currentFrame = glfwGetTime();
