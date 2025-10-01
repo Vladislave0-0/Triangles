@@ -64,7 +64,7 @@ glm::vec3 light_direction = glm::vec3(0.0f, 0.0f, 1.0f);
 glm::vec3 light_color = glm::vec3(1.0f, 1.0f, 1.0f);
 float light_intensity = 1.0f;
 
-// Flag
+// Flag.
 bool show_flag = false;
 float flag_distance = 5.0f;
 float flag_size = 2.0f;
@@ -251,16 +251,7 @@ static void drawTriangles(std::vector<Triangle<PointTy>> &input,
                           size_t triag_num) {
   glBegin(GL_TRIANGLES);
 
-  // Change the color depending on whether the triangles intersect or not.
-  for (size_t i = 0; i < triag_num; ++i) {
-    if (intersections.find(i / 2) != intersections.end()) {
-      glColor3f(intersection_color.r, intersection_color.g,
-                intersection_color.b);
-    } else {
-      glColor3f(no_intersection_color.r, no_intersection_color.g,
-                no_intersection_color.b);
-    }
-
+  for (size_t i = 0; i < triag_num; i += 2) {
     auto a = input[i].get_a();
     auto b = input[i].get_b();
     auto c = input[i].get_c();
@@ -270,30 +261,36 @@ static void drawTriangles(std::vector<Triangle<PointTy>> &input,
     glm::vec3 v2 = glm::vec3(c.x - a.x, c.y - a.y, c.z - a.z);
     glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
-    // For each even triangle, the normal changes its direction because the
-    // circumambulation of the triangle changes (each even triangle is an exact
-    // copy of the odd triangle).
-    if (i % 2)
+    glm::vec3 triangle_center =
+        glm::vec3((a.x + b.x + c.x), (a.y + b.y + c.y), (a.z + b.z + c.z)) /
+        3.0f;
+
+    glm::vec3 triangle_to_camera = glm::normalize(camera_pos - triangle_center);
+
+    // The dot product of the normal and the vector to the camera.
+    float dot = glm::dot(normal, triangle_to_camera);
+
+    // If the normal is facing away from the camera (the back side), use the
+    // second triangle from the pair.
+    size_t triangle_index = i;
+    if (dot < 0) {
+      ++triangle_index;
       normal = -normal;
-
-    glm::vec3 lightDir = glm::normalize(light_direction);
-    float dotProduct = glm::dot(normal, lightDir);
-
-    // We shift all the normals that are opposite to the light source (that is,
-    // these are the normal triangles that should be illuminated) by a small
-    // amount so that there is no flickering effect when working with OpenGL.
-    if (dotProduct >= 0) {
-      glm::vec3 offset = epsilon_shift * lightDir;
-      a.x += offset.x;
-      a.y += offset.y;
-      a.z += offset.z;
-      b.x += offset.x;
-      b.y += offset.y;
-      b.z += offset.z;
-      c.x += offset.x;
-      c.y += offset.y;
-      c.z += offset.z;
     }
+
+    // Change the color depending on whether the triangles intersect or not.
+    if (intersections.find(i / 2) != intersections.end()) {
+      glColor3f(intersection_color.r, intersection_color.g,
+                intersection_color.b);
+    } else {
+      glColor3f(no_intersection_color.r, no_intersection_color.g,
+                no_intersection_color.b);
+    }
+
+    // Recalculating the vertices for the selected triangle.
+    a = input[triangle_index].get_a();
+    b = input[triangle_index].get_b();
+    c = input[triangle_index].get_c();
 
     glNormal3fv(glm::value_ptr(normal));
     glVertex3f(a.x, a.y, a.z);
