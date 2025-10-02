@@ -1,5 +1,5 @@
-#include "../include/octotree.hpp"
-#include "../include/visualizer.hpp"
+#include "octotree.hpp"
+#include "visualizer/visualizer.hpp"
 
 void print_help() {
     std::cout << "Usage: triag [OPTIONS] < input_file\n\n"
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
   }
 
   if (use_visualization) {
-    runVisualizer(input, intersections);
+    visualizer::runVisualizer(input, intersections);
   } else {
     for (auto it = intersections.begin(); it != intersections.end(); ++it)
       std::cout << it->second << std::endl;

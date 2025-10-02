@@ -61,7 +61,7 @@ for test_file in "$test_dir"/test*.txt; do
     [ ! -f "$answer_file" ] && { echo "Missing answer for $test_file"; rm -f "$temp_result"; exit 1; }
 
     start_time=$(current_time_ms)
-    "$triag_bin" < "$test_file" -l > "$temp_result"
+    "$triag_bin" < "$test_file" > "$temp_result"
     elapsed_time=$(( $(current_time_ms) - start_time ))
 
     if diff -q "$answer_file" "$temp_result" > /dev/null; then

@@ -31,12 +31,27 @@ set(IMGUI_SOURCES
     imgui/backends/imgui_impl_opengl3.cpp
 )
 
-add_executable(triag
+set(TRIANGLES_SOURCES
     src/main.cpp
     src/config.cpp
-    src/visualizer.cpp
+)
+
+set(VISUALIZER_SOURCES
+    src/visualizer/camera.cpp
+    src/visualizer/flag.cpp
+    src/visualizer/grid.cpp
+    src/visualizer/shader.cpp
+    src/visualizer/ui.cpp
+    src/visualizer/visualizer.cpp
+)
+
+set(ALL_SOURCES
+    ${TRIANGLES_SOURCES}
+    ${VISUALIZER_SOURCES}
     ${IMGUI_SOURCES}
 )
+
+add_executable(triag ${ALL_SOURCES})
 
 # Linking libraries
 target_link_libraries(triag PRIVATE 
@@ -47,6 +62,12 @@ target_link_libraries(triag PRIVATE
     X11
     Xrandr
     Xi
+)
+
+# Include directories for the target
+target_include_directories(triag PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui
 )
 
 # Testing

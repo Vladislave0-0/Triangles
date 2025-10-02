@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../include/triangles.hpp"
+#include "triangles.hpp"
 
 namespace triangle {
 bool cmp(double x, double y) { return fabs(x - y) < epsilon_; }
