@@ -224,6 +224,7 @@ void mainLoop(GLFWwindow *window,
                        uiSystem->getSettings().fov,
                        uiSystem->getSettings().drawing_range, screen_width,
                        screen_height);
+    gridSystem->initialize();
 
     // Render flag if visible
     if (flagSystem->isVisible()) {
@@ -233,6 +234,7 @@ void mainLoop(GLFWwindow *window,
                          uiSystem->getSettings().fov,
                          uiSystem->getSettings().drawing_range);
     }
+    flagSystem->initialize();
 
     // Render ImGui interface.
     uiSystem->renderImGui();
